@@ -1,7 +1,7 @@
 import { BN } from "bn.js";
 import { utils } from "hash.js";
-// import { randomBytes } from "crypto";
-
+import { getRandomBytes } from "../util";
+import { randomBytes } from "crypto";
 const EC_GROUP_ORDER = Buffer.from(
   "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
   "hex"
@@ -15,8 +15,9 @@ function isValidPrivateKey(privateKey: Buffer) {
   ); // < G
 }
 
-export function generatePrivateKey() {
-  // const privateKey = randomBytes(32);
+export function generatePrivateKey(size: number) {
+  const privateKey = randomBytes(32);
+  console.log(privateKey);
 }
 
 export function generatePublicKey(privateKey: Buffer) {}

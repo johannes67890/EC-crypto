@@ -10,6 +10,12 @@ const config = {
     path: path.resolve(__dirname, "dist"),
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
@@ -33,6 +39,8 @@ const config = {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
     fallback: {
       crypto: require.resolve("crypto-browserify"),
+      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer"),
     },
   },
 };

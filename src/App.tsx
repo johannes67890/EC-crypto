@@ -5,6 +5,7 @@ function App() {
   return (
     <div className="max-w-6xl mx-auto">
       <Header />
+      <button onClick={() => generatePrivateKey(32)}>Click</button>
     </div>
   );
 }
