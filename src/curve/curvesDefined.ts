@@ -1,6 +1,6 @@
 import hash from "hash.js";
 
-interface curveOpt {
+export interface curveOpt {
   name: string; // Name of the curve
   prime: string; // modulo prime number p
   p: string; // prime order p
