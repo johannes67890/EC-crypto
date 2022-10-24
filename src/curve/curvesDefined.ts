@@ -1,5 +1,4 @@
-import hash from "hash.js";
-
+import { sha256 } from "hash.js";
 export interface curveOpt {
   name: string; // Name of the curve
   prime: string; // modulo prime number p
@@ -24,7 +23,7 @@ export const secp256k1: curveOpt = {
   b: "7",
   n: "ffffffff ffffffff ffffffff fffffffe baaedce6 af48a03b bfd25e8c d0364141",
   h: "1",
-  hash: hash.sha256,
+  hash: sha256,
   g: {
     x: "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
     y: "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
