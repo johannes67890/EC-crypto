@@ -1,11 +1,9 @@
 import BN from "bn.js";
 import { utils } from "hash.js";
-import { sha256 } from "hash.js";
-import { secp256k1, curveOpt } from "./curvesDefined";
-import { Buffer } from "buffer";
+import { curveOpt } from "./curvesDefined";
 import { randomBytes } from "crypto";
 
-interface Key {
+export interface Key {
   x: string;
   y: string;
 }
@@ -54,11 +52,5 @@ class Keys {
     console.log(pubX.byteLength() + pubY.byteLength());
 
     return { x: pubX.toString("hex"), y: pubY.toString("hex") };
-  }
-
-  public sign(hashedMsg: string, privateKey: Key) {
-    //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
-
-    const k = new BN(randomBytes(4), 16); // random number
   }
 }
