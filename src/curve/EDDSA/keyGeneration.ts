@@ -1,11 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
+import { Point } from "./index";
 import { EDDSA } from ".";
-
-export interface Key {
-  x: BN;
-  y: BN;
-}
 
 /**
  *
@@ -19,8 +15,8 @@ class KeySet extends EDDSA {
    *
    * @returns typeof `Key`
    */
-  public generatePrivateKey(size: number): Key {
-    let PRIVATE_KEY: Key;
+  public generatePrivateKey(size: number): Point {
+    let PRIVATE_KEY: Point;
     if (new BN(size).isEven()) {
       PRIVATE_KEY = {
         x: new BN(randomBytes(size / 2), "hex"),
@@ -45,7 +41,7 @@ class KeySet extends EDDSA {
    * @param privateKey of type `Key`
    * @returns typeof `Key`
    */
-  public generatePublicKey(privateKey: Key): Key {
+  public generatePublicKey(privateKey: Point): Point {
     /**
      * TODO: this might be wrong
      * Dubble check

@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { curveOpt } from "../curvesDefined";
 import { randomBytes } from "crypto";
-import { Key } from "./keyGeneration";
+import { Key } from "./index";
 import { EDDSA } from ".";
 
 interface signature {
