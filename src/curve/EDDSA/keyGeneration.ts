@@ -41,13 +41,18 @@ class KeySet extends EDDSA {
    * @param privateKey of type `Key`
    * @returns typeof `Key`
    */
-  public generatePublicKey(privateKey: Point): Point {
+  public generatePublicKey(privateKey: Point, outputType?: string): Point {
     /**
      * TODO: this might be wrong
      * Dubble check
      */
-    const pubX = privateKey.x.mul(this.Gx).mod(this.p);
-    const pubY = privateKey.y.mul(this.Gy).mod(this.p);
+    const pubX = this.mulMod(privateKey.x, this.Gx);
+    const pubY = this.mulMod(privateKey.y, this.Gy);
+
+    // TODO:
+    // if (outputType == "hex") {
+    //   return { x: pubX.toString("hex"), y: pubY.toString("hex") };
+    // }
 
     return { x: pubX, y: pubY };
   }

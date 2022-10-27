@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { curveOpt } from "../curvesDefined";
 import { randomBytes } from "crypto";
-import { Key } from "./index";
+import { Point } from "./index";
 import { EDDSA } from ".";
 
 interface signature {
@@ -22,7 +22,7 @@ class Signature extends EDDSA {
    * @param privateKey Private key used to sign message
    * @returns Digital signature `Point`.
    */
-  public sign(hashedMsg: string, privateKey: Key): signature {
+  public sign(hashedMsg: string, privateKey: Point): signature {
     //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
     let k = new BN(randomBytes(this.n.byteLength()), "hex");
     while (k.isZero()) {
