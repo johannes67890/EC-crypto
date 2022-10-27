@@ -11,6 +11,8 @@ export class EDDSA {
   public Gy: BN;
   public p: BN;
   public n: BN;
+  public a: BN;
+  public b: BN;
   public hash: Sha224Constructor | Sha256Constructor | Sha512Constructor;
 
   constructor(curve: curveOpt) {
@@ -22,6 +24,8 @@ export class EDDSA {
     this.Gy = new BN(curve.g.y, "hex");
     this.p = new BN(curve.p, "hex");
     this.n = new BN(curve.n, "hex");
+    this.a = new BN(curve.a, "hex");
+    this.b = new BN(curve.b, "hex");
     this.hash = curve.hash;
   }
   /**
@@ -37,9 +41,14 @@ export class EDDSA {
       return false;
     }
     const lhs = this.mulMod(x, y);
-    //const rhs = this.addMod(,y)
+    const rhs = this.addMod(
+      this.addMod(this.expMod(x, new BN(3)), this.mulMod(this.a, x)),
+      this.b
+    );
 
-    return false; //TODO: TEMP!
+    if (lhs.toNumber() == 0 && rhs.toNumber() == 0) {
+      return true;
+    } else return false;
   }
 
   /**
@@ -67,23 +76,20 @@ export class EDDSA {
     z.mod(this.p);
     return z;
   }
-
+  /**
+   * mulMod computes z = (x * y) % p.
+   */
   private mulMod(x: BN, y: BN): BN {
-    let num: BN = x;
-    let z: BN = new BN(0);
-
-    for (let i = 0; i < y.bitLength(); i++) {
-      /* TODO: find solution to Bit() function
-           if y.Bit(i) == 1 {
-            z = addMod(z, n, p)
-          }
-          n = addMod(n, n, p)
-       */
-    }
+    let z = new BN(0);
+    z = x.mul(y).mod(this.p);
     return z;
   }
-
+  /**
+   * mulMod computes z = (x^^y) % p.
+   */
   private expMod(x: BN, y: BN) {
-    return x.pow(y).mod(this.p);
+    let z = new BN(0);
+    z = x.pow(y).mod(this.p);
+    return z;
   }
 }

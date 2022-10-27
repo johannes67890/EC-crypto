@@ -1,5 +1,5 @@
 import React from "react";
-import KeySet from "./curve/keyGeneration";
+import KeySet from "./curve/EDDSA/keyGeneration";
 import { secp256k1 } from "./curve/curvesDefined";
 import Header from "./frontend/Header";
 function App() {
@@ -7,9 +7,7 @@ function App() {
   return (
     <div className="max-w-6xl mx-auto">
       <Header />
-      <button onClick={() => x.sign("w", x.generatePrivateKey(32))}>
-        Click
-      </button>
+      <button>Click</button>
     </div>
   );
 }
