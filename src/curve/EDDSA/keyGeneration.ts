@@ -8,11 +8,20 @@ import { EDDSA } from ".";
  */
 class KeySet extends EDDSA {
   /**
+   *
+   * @param privSize
+   * @returns Pair of private & public key
+   */
+  super(privSize: number): [Point, Point] {
+    const PRIVATE_KEY = this.generatePrivateKey(privSize);
+
+    return [PRIVATE_KEY, this.generatePublicKey(PRIVATE_KEY)];
+  }
+
+  /**
    * Generate random `size` or 32 byte size private Key\
    *
-   * @param size int of (Pref. even )
-   *
-   *
+   * @param size int of (Pref. even number)
    * @returns typeof `Key`
    */
   public generatePrivateKey(size: number): Point {
@@ -22,14 +31,9 @@ class KeySet extends EDDSA {
         x: new BN(randomBytes(size / 2), "hex"),
         y: new BN(randomBytes(size / 2), "hex"),
       };
-    } else if (size === undefined) {
-      PRIVATE_KEY = {
-        x: new BN(randomBytes(32 / 2), "hex"),
-        y: new BN(randomBytes(32 / 2), "hex"),
-      };
     } else throw new Error("Invalid key size on Private key");
 
-    return PRIVATE_KEY != undefined
+    return PRIVATE_KEY !== undefined
       ? PRIVATE_KEY
       : (function () {
           throw "Private key returned 'undefinied'";

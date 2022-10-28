@@ -54,7 +54,7 @@ export class EDDSA {
       this.b
     );
 
-    if (lhs.toNumber() == 0 && rhs.toNumber() == 0) {
+    if (lhs.toNumber() === 0 && rhs.toNumber() === 0) {
       return true;
     } else return false;
   }
@@ -66,8 +66,8 @@ export class EDDSA {
    */
   public isInfinity(point: Point): Boolean {
     return point.x.isZero() ||
-      (point.x.toNumber() == Infinity && point.y.isZero()) ||
-      point.y.toNumber() == Infinity
+      (point.x.toNumber() === Infinity && point.y.isZero()) ||
+      point.y.toNumber() === Infinity
       ? true
       : false;
   }
