@@ -45,7 +45,10 @@ class KeySet extends EDDSA {
    * @param privateKey of type `Key`
    * @returns typeof `Key`
    */
-  public generatePublicKey(privateKey: Point, outputType?: string): Point {
+  public generatePublicKey(
+    privateKey: Point,
+    outputType?: "hex" | "BN"
+  ): Point {
     /**
      * TODO: this might be wrong
      * Dubble check
