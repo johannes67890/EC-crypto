@@ -2,20 +2,20 @@ import BN from "bn.js";
 import { randomBytes } from "crypto";
 import { Point } from "./index";
 import { EDDSA } from ".";
+import { curveOpt } from "../curvesDefined";
 
 /**
  *
  */
 class KeySet extends EDDSA {
-  /**
-   *
-   * @param privSize
-   * @returns Pair of private & public key
-   */
-  super(privSize: number): [Point, Point] {
-    const PRIVATE_KEY = this.generatePrivateKey(privSize);
+  public publicKey: Point;
+  public privateKey: Point;
 
-    return [PRIVATE_KEY, this.generatePublicKey(PRIVATE_KEY)];
+  constructor(curve: curveOpt) {
+    super(curve);
+    const PRIVATE_KEY = this.generatePrivateKey(32);
+    this.privateKey = PRIVATE_KEY;
+    this.publicKey = this.generatePublicKey(PRIVATE_KEY);
   }
 
   /**
