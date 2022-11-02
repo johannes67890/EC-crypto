@@ -1,8 +1,8 @@
 import BN from "bn.js";
-import { curveOpt } from "../curvesDefined";
 import { randomBytes } from "crypto";
 import { Point } from "./index";
 import { EDDSA } from ".";
+import { hashMsgSHA256 } from "../../util";
 
 interface signature {
   r: BN;
@@ -24,12 +24,46 @@ class Signature extends EDDSA {
    */
   public sign(hashedMsg: string, privateKey: Point): signature {
     //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
-    let k = new BN(randomBytes(this.n.byteLength()), "hex");
-    while (k.isZero()) {
-      k = new BN(randomBytes(this.n.byteLength()), "hex");
-    }
-    const r = k.mul(this.Gx);
-    //const s: BN// = k.invm(hashedMsg+privateKey.x.mul(r)).mod(this.n)
-    return { r: r, s: new BN("") };
+    // generate random k in interval [1,n-1] where n is order of curve
+    let k: BN;
+    do {
+      k = new BN(randomBytes(32), "hex");
+    } while (k.eqn(0));
+
+    // r = (x1, y1) = kG
+    const r = this.mulMod(k, this.Gx);
+    // s = (x2, y2) = k^-1 * (h + d * r) mod n
+    const s = k
+      .invm(this.n)
+      .mul(new BN(hashedMsg, "hex").add(r.mul(privateKey.x)))
+      .mod(this.n);
+    return { r, s };
+  }
+
+  public signMsg(message: string, privateKey: Point): signature {
+    const hashedMsg = hashMsgSHA256(message);
+    return this.sign(hashedMsg, privateKey);
+  }
+
+  public verify(
+    hashedMsg: string,
+    signature: signature,
+    publicKey: Point
+  ): boolean {
+    //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
+    const sInv = signature.s.invm(this.n);
+    const u1 = new BN(hashedMsg, "hex").mul(sInv).mod(this.n);
+    const u2 = signature.r.mul(sInv).mod(this.n);
+    const r = u1.mul(this.Gx).add(u2.mul(publicKey.x)).mod(this.n);
+    return r.eq(signature.r);
+  }
+
+  public verifyMsg(
+    message: string,
+    signature: signature,
+    publicKey: Point
+  ): boolean {
+    const hashedMsg = hashMsgSHA256(message);
+    return this.verify(hashedMsg, signature, publicKey);
   }
 }

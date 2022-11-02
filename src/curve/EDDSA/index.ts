@@ -1,12 +1,6 @@
 import BN from "bn.js";
 import { curveOpt } from "../curvesDefined";
 
-// TODO: make new type?
-// export interface Point<T> {
-//   x: BN | T;
-//   y: BN | T;
-// }
-
 export interface Point {
   x: BN;
   y: BN;
@@ -67,11 +61,6 @@ export class EDDSA {
   public isInfinity(point: Point): Boolean {
     return point.x.isZero() || point.y.isZero() ? true : false;
   }
-
-  // TODO:
-  // public isPoint = (x: any): x is Point<any> => {
-  //   return true;
-  // };
 
   /*
    * addMod computes z = (x + y) % p.
