@@ -29,10 +29,10 @@ export class EDDSA {
     this.hash = curve.hash;
   }
   /**
-   *
-   * @param point Point of ec of type `Point`
+   * Check if point is on elliptic curve.
+   * @param point Point of the ec of type `Point`
+   * @returns Boolean
    */
-  // TODO:
   public isOnCurve(point: Point): boolean {
     const x: BN = point.x;
     const y: BN = point.y;

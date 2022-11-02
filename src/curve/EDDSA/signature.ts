@@ -17,6 +17,7 @@ class Signature extends EDDSA {
    * Compute inverse modulo of point `r`\
    * (where `r` y-cordinat is ignored: `r = x1`)
    * \
+   *  computes `s` = (k^-1 * (h + r * d)) % n
    *
    * @param hashedMsg Hashed message to be signend
    * @param privateKey Private key used to sign message
@@ -39,12 +40,30 @@ class Signature extends EDDSA {
       .mod(this.n);
     return { r, s };
   }
-
+  /**
+   * Hashes message with SHA256 and signs it.
+   * @param message hashed message
+   * @param privateKey private key
+   * @returns Point of signature
+   */
   public signMsg(message: string, privateKey: Point): signature {
     const hashedMsg = hashMsgSHA256(message);
     return this.sign(hashedMsg, privateKey);
   }
-
+  /**
+   * Verifies digital signature.\
+   * \
+   * Computes Inverse signature `s` -> `sInv` = `s^-1` mod `n`\
+   * Computes `u1` = `Msg * sInv` mod `n`\
+   * Computes `u2` = `r * sInv` mod `n`\
+   * Computes `r` = `u1 * Gx + u2 * Qx` mod `n`\
+   * \
+   * If `r` == `signature.r` return `true` else `false`
+   * @param hashedMsg Hashed message to be verified
+   * @param signature signature of message
+   * @param publicKey public key of signer
+   * @returns boolean; true if signature is valid
+   */
   public verify(
     hashedMsg: string,
     signature: signature,
@@ -57,7 +76,13 @@ class Signature extends EDDSA {
     const r = u1.mul(this.Gx).add(u2.mul(publicKey.x)).mod(this.n);
     return r.eq(signature.r);
   }
-
+  /**
+   * Hashes message with SHA256 and verifies it.
+   * @param message message to be verified
+   * @param signature signature of message
+   * @param publicKey public key of signer
+   * @returns boolean; true if signature is valid
+   */
   public verifyMsg(
     message: string,
     signature: signature,
