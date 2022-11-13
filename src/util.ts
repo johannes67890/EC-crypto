@@ -14,3 +14,10 @@ export function getRandomInt(min: number, max: number) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function getByteSize(val: BN) {
+  return val.byteLength();
+}
+export function classNames(...classes: (false | null | undefined | string)[]) {
+  return classes.filter(Boolean).join(" "); // function to combind classNames
+}
