@@ -1,6 +1,6 @@
-import React, { useContext, createContext } from "react";
+import React, { useContext } from "react";
 import { KeysetContext } from "../App";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { ArrowRightIcon, KeyIcon } from "@heroicons/react/24/solid";
 import { Point } from "../curve/EDDSA";
 import { classNames } from "../util";
 import BN from "bn.js";
@@ -10,7 +10,7 @@ const CurveText = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="bg-gray-200 p-2 w-full rounded-md flex justify-between">
+      <div className="p-2 w-full rounded-md flex justify-between">
         <KeyTextShowcase Key={keySet.privateKey} title={"Private Key"} />
         <ArrowRightIcon className="w-6 h-6 my-auto" />{" "}
         <KeyTextShowcase Key={keySet.publicKey} title={"Public Key"} />
@@ -25,20 +25,35 @@ const KeyTextShowcase: React.FC<{
 }> = ({ Key, title }) => {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="font-bold">{title}</h3>
-      <div className="flex flex-col">
-        <div className="bg-red-300 rounded-t-md p-1 flex gap-1">
-          <span className="text-red-500 font-bold">X</span>
-          {Key.x.toString("hex")}
+      <div className="border bg-gray-200 rounded-md p-2">
+        <h3 className="font-bold flex gap-1">
+          {" "}
+          {title === "Private Key" ? (
+            <KeyIcon
+              className={classNames("h-3 w-3 my-auto", "fill-orange-400")}
+            />
+          ) : (
+            <KeyIcon
+              className={classNames("h-3 w-3 my-auto", "fill-blue-400")}
+            />
+          )}
+          {title}
+        </h3>
+
+        <div className="flex flex-col">
+          <div className="bg-red-300 rounded-t-md p-1 px-2 flex gap-1">
+            <span className="text-red-500 font-bold">X</span>
+            {Key.x.toString("hex")}
+          </div>
+          <KeyDetails point={Key.x} cord="x" />
         </div>
-        <KeyDetails point={Key.x} cord="x" />
-      </div>
-      <div className="flex flex-col">
-        <div className="bg-blue-300 rounded-md p-1 flex gap-1">
-          <span className="text-blue-500 font-bold">Y</span>
-          {Key.y.toString("hex")}
+        <div className="flex flex-col">
+          <div className="bg-blue-300 rounded-md p-1 flex gap-1">
+            <span className="text-blue-500 font-bold">Y</span>
+            {Key.y.toString("hex")}
+          </div>
+          <KeyDetails point={Key.y} cord="y" />
         </div>
-        <KeyDetails point={Key.y} cord="y" />
       </div>
     </div>
   );
