@@ -25,7 +25,7 @@ class Signature extends EDDSA {
    */
   public sign(hashedMsg: string, privateKey: Point): signature {
     //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
-    // generate random k in interval [1,n-1] where n is order of curve
+    // generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;
     do {
       k = new BN(randomBytes(32), "hex");
@@ -69,11 +69,10 @@ class Signature extends EDDSA {
     signature: signature,
     publicKey: Point
   ): boolean {
-    //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
     const sInv = signature.s.invm(this.n);
     const u1 = new BN(hashedMsg, "hex").mul(sInv).mod(this.n);
     const u2 = signature.r.mul(sInv).mod(this.n);
-    const r = u1.mul(this.Gx).add(u2.mul(publicKey.x)).mod(this.n);
+    const r = u1.mul(this.Gx).add(u2.mul(publicKey.x)).mod(this.n); // TODO: Check if it is correct (Gx?)
     return r.eq(signature.r);
   }
   /**

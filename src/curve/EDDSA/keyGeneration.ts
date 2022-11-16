@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { Point } from "./index";
-import { EDDSA } from ".";
+import { Point } from "./EDDSA";
+import { EDDSA } from "./EDDSA";
 import { curveOpt } from "../curvesDefined";
 
 /**

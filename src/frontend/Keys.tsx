@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
 import { KeysetContext } from "../App";
 import { ArrowRightIcon, KeyIcon } from "@heroicons/react/24/solid";
-import { Point } from "../curve/EDDSA";
+import { Point } from "../curve/EDDSA/EDDSA";
 import { classNames } from "../util";
 import BN from "bn.js";
 
-const CurveText = () => {
+const Keys = () => {
   const keySet = useContext(KeysetContext);
-
+  
   return (
     <div className="max-w-5xl mx-auto">
+      
       <div className="p-2 w-full rounded-md flex justify-between">
         <KeyTextShowcase Key={keySet.privateKey} title={"Private Key"} />
         <ArrowRightIcon className="w-6 h-6 my-auto" />{" "}
@@ -63,6 +64,8 @@ const KeyDetails: React.FC<{ point: BN; cord: "x" | "y" }> = ({
   point,
   cord,
 }) => {
+  const keySet = useContext(KeysetContext);
+
   return (
     <div
       className={classNames(
@@ -70,14 +73,17 @@ const KeyDetails: React.FC<{ point: BN; cord: "x" | "y" }> = ({
         cord === "x" ? "bg-red-200" : "bg-blue-200"
       )}
     >
-      <ul>
-        <li className="flex gap-1">
-          <span className="font-bold"> Byte(s)</span>
+      <ul className="flex mx-auto text-sm font-mono gap-2">
+        <li className="flex gap-1 after:border-dashed after:border-r after:p-1 after:border-black">
+          <span className="font-bold">Byte(s):</span>
           {point.byteLength()}
+        </li>
+        <li>
+          <span className="font-bold">Origin: </span>{keySet.name}
         </li>
       </ul>
     </div>
   );
 };
 
-export default CurveText;
+export default Keys;
