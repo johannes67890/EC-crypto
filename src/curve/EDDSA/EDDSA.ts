@@ -62,10 +62,11 @@ export class EDDSA {
    */
   public pointAdd(point1: Point, point2: Point): Point {
     // pointAdd computes the sum of two points on the elliptic curve.
-    const x1: BN = point1.x;
-    const y1: BN = point1.y;
-    const x2: BN = point2.x;
-    const y2: BN = point2.y;
+    const red = BN.mont(this.p);
+    const x1: BN = point1.x
+    const y1: BN = point1.y
+    const x2: BN = point2.x
+    const y2: BN  = point2.y
 
     if (this.isInfinity(point1)) {
       return point2;
@@ -82,26 +83,22 @@ export class EDDSA {
       return { x: new BN(0), y: new BN(0) };
     }
 
-    const s = this.mulMod(
-      this.subMod(y2, y1),
-      this.expMod(this.subMod(x2, x1), this.p.sub(new BN(2)))
-    );
+    // computes s = (y2 - y1) / (x2 - x1)
+    const s = y2.toRed(red).redSub(y1.toRed(red)).redMul(x2.toRed(red).redSub(x1.toRed(red)).redInvm());
+    // computes x3 = s**2 - x1 - x2
+    const x3 = s.redSqr().redSub(x1.toRed(red)).redSub(x2.toRed(red));
+    // computes y3 = s * (x1 - x3) - y1
+    const y3 = s.redMul(x1.toRed(red).redSub(x3)).redSub(y1.toRed(red));
 
-    const x3 = this.subMod(this.mulMod(s, s), this.addMod(x1, x2));
-    const y3 = this.subMod(this.mulMod(s, this.subMod(x1, x3)), y1);
-
-    return { x: x3, y: y3 };
+    return { x: x3.fromRed(), y: y3.fromRed() };
   }
+
   /**
    * pointdouble
    * @param point Point of the ec of type `Point`
    * @returns Point of the ec of type `Point`
    */
   private pointdouble(point: Point): Point {
-    /**
-     * TODO: fix program, crashing when running this function
-     * https://asecuritysite.com/ecc/ecc_add (point doubling)
-     */
     const x: BN = point.x;
     const y: BN = point.y;
 
@@ -159,6 +156,7 @@ export class EDDSA {
   public expMod(x: BN, y: BN) {
     let z = new BN(0);
     z = x.pow(y).mod(this.p);
+    
     return z;
   }
 }
