@@ -60,46 +60,48 @@ export class EDDSA {
    * @param point2 Point of the ec of type `Point`
    * @returns Point of the ec of type `Point`
    */
-  public pointAdd() {
+  public pointAdd(point1: Point, point2: Point): Point {
     // pointAdd computes the sum of two points on the elliptic curve.
-    return (point1: Point, point2: Point): Point => {
-      const x1: BN = point1.x;
-      const y1: BN = point1.y;
-      const x2: BN = point2.x;
-      const y2: BN = point2.y;
+    const x1: BN = point1.x;
+    const y1: BN = point1.y;
+    const x2: BN = point2.x;
+    const y2: BN = point2.y;
 
-      if (this.isInfinity(point1)) {
-        return point2;
-      }
-      if (this.isInfinity(point2)) {
-        return point1;
-      }
+    if (this.isInfinity(point1)) {
+      return point2;
+    }
+    if (this.isInfinity(point2)) {
+      return point1;
+    }
 
-      if (x1.cmp(x2) === 0 && y1.cmp(y2) === 0) {
-        return this.pointdouble(point1);
-      }
+    if (x1.cmp(x2) === 0 && y1.cmp(y2) === 0) {
+      return this.pointdouble(point1);
+    }
 
-      if (x1.cmp(x2) === 0 && y1.cmp(y2.neg()) === 0) {
-        return { x: new BN(0), y: new BN(0) };
-      }
+    if (x1.cmp(x2) === 0 && y1.cmp(y2.neg()) === 0) {
+      return { x: new BN(0), y: new BN(0) };
+    }
 
-      const s = this.mulMod(
-        this.subMod(y2, y1),
-        this.expMod(this.subMod(x2, x1), this.p.sub(new BN(2)))
-      );
+    const s = this.mulMod(
+      this.subMod(y2, y1),
+      this.expMod(this.subMod(x2, x1), this.p.sub(new BN(2)))
+    );
 
-      const x3 = this.subMod(this.mulMod(s, s), this.addMod(x1, x2));
-      const y3 = this.subMod(this.mulMod(s, this.subMod(x1, x3)), y1);
+    const x3 = this.subMod(this.mulMod(s, s), this.addMod(x1, x2));
+    const y3 = this.subMod(this.mulMod(s, this.subMod(x1, x3)), y1);
 
-      return { x: x3, y: y3 };
-    };
+    return { x: x3, y: y3 };
   }
   /**
-   * pointdouble computes the sum of two points on the elliptic curve.
+   * pointdouble
    * @param point Point of the ec of type `Point`
    * @returns Point of the ec of type `Point`
    */
-  public pointdouble(point: Point): Point {
+  private pointdouble(point: Point): Point {
+    /**
+     * TODO: fix program, crashing when running this function
+     * https://asecuritysite.com/ecc/ecc_add (point doubling)
+     */
     const x: BN = point.x;
     const y: BN = point.y;
 
