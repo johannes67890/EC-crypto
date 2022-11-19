@@ -5,10 +5,12 @@ import Header from "./frontend/Header";
 import Menu from "./frontend/Menu";
 import Keys from "./frontend/Keys";
 import { EDDSA } from "./curve/EDDSA/EDDSA";
-import { BN } from "bn.js";
+import Signature from "./curve/EDDSA/signature";
 
-const keySet = new KeySet(secp256k1);
-export const KeysetContext = createContext(keySet);
+const bob = new KeySet(secp256k1);
+const alice = new KeySet(secp256k1);
+
+export const KeysetContext = createContext([bob, alice]);
 
 function App() {
   test();
@@ -16,7 +18,7 @@ function App() {
     <div className="max-w-6xl mx-auto">
       <Header />
       <Menu />
-      <KeysetContext.Provider value={keySet}>
+      <KeysetContext.Provider value={[bob,alice]}>
         <Keys />
       </KeysetContext.Provider>
     </div>
@@ -27,12 +29,18 @@ function test() {
   const bob = new KeySet(secp256k1);
   const alice = new KeySet(secp256k1);
   const eddsa = new EDDSA(secp256k1);
+  const sig = new Signature(secp256k1);
 
-  // p1 = new BN(2, 10) ;
-  // console.log("Bob Private key", bob.privateKey);
-  // console.log("Bob Public key", bob.publicKey);
-  // console.log("Alice Private key", alice.privateKey);
-  // console.log("Alice Public key", alice.publicKey);
+  const message = "Hello World";
+  console.log("Message: ", message);
+  
+  const signature = sig.signMsg(message, bob.privateKey);
+  const verified = sig.verifyMsg(message, signature, bob.publicKey);
+
+  console.log("Signature: ", signature);
+  console.log("Verified: ", verified);
+  
+  
   console.log("Bob + Alice", eddsa.pointAdd(bob.publicKey, alice.publicKey).x.toString(10));
   // console.log("is on curve", keySet.isOnCurve(keySet.publicKey));
 }

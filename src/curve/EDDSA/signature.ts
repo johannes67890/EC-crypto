@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { Point } from "./index";
-import { EDDSA } from ".";
+import { Point } from "./EDDSA";
+import { EDDSA } from "./EDDSA";
 import { hashMsgSHA256 } from "../../util";
 
 interface signature {
@@ -23,10 +23,11 @@ class Signature extends EDDSA {
    * @param privateKey Private key used to sign message
    * @returns Digital signature `Point`.
    */
-  public sign(hashedMsg: string, privateKey: Point): signature {
+  private sign(hashedMsg: string, privateKey: Point): signature {
     //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
     // generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;
+    
     do {
       k = new BN(randomBytes(32), "hex");
     } while (k.eqn(0));
@@ -48,6 +49,8 @@ class Signature extends EDDSA {
    */
   public signMsg(message: string, privateKey: Point): signature {
     const hashedMsg = hashMsgSHA256(message);
+    console.log("Sign hashedMsg: ", hashedMsg);
+
     return this.sign(hashedMsg, privateKey);
   }
   /**
@@ -64,11 +67,12 @@ class Signature extends EDDSA {
    * @param publicKey public key of signer
    * @returns boolean; true if signature is valid
    */
-  public verify(
+  private verify(
     hashedMsg: string,
     signature: signature,
     publicKey: Point
   ): boolean {
+
     const sInv = signature.s.invm(this.n);
     const u1 = new BN(hashedMsg, "hex").mul(sInv).mod(this.n);
     const u2 = signature.r.mul(sInv).mod(this.n);
@@ -88,6 +92,9 @@ class Signature extends EDDSA {
     publicKey: Point
   ): boolean {
     const hashedMsg = hashMsgSHA256(message);
+    console.log("Verify hashedMsg: ", hashedMsg);
+    
     return this.verify(hashedMsg, signature, publicKey);
   }
 }
+export default Signature;

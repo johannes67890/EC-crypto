@@ -1,12 +1,17 @@
 import BN from "bn.js";
 import { Buffer } from "buffer";
-import { utils } from "hash.js";
+import { sha256, utils } from "hash.js";
 
 export function parseBytes(bytes: string) {
   return utils.toArray(bytes, "hex");
 }
+/**
+ * Hashes message with SHA256
+ * @param message message to be hashed
+ * @returns digest of message in 'hex' format
+ */
 export function hashMsgSHA256(message: string): string {
-  return hash.sha256().update(message).digest("hex");
+  return sha256().update(message).digest("hex");
 }
 
 export function getRandomInt(min: number, max: number) {
