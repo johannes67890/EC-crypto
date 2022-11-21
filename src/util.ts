@@ -14,6 +14,7 @@ export function hashMsgSHA256(message: string): string {
   return sha256().update(message).digest("hex");
 }
 
+
 export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -25,4 +26,8 @@ export function getByteSize(val: BN) {
 }
 export function classNames(...classes: (false | null | undefined | string)[]) {
   return classes.filter(Boolean).join(" "); // function to combind classNames
+}
+
+export function uint256(x: any) {
+  return new BN(x);
 }

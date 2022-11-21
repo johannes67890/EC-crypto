@@ -13,6 +13,7 @@ export interface curveOpt {
     x: string;
     y: string;
   };
+  G: string; // Base point uncompressed 
 }
 
 export const secp256k1: curveOpt = {
@@ -28,4 +29,5 @@ export const secp256k1: curveOpt = {
     x: "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
     y: "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
   },
+  G: "79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 59F2815B 16F81798 483ADA77 26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419 9C47D08F FB10D4B8"
 };

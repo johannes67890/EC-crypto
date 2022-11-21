@@ -1,4 +1,5 @@
 import BN from "bn.js";
+import { uint256 } from "../../util";
 import { curveOpt } from "../curvesDefined";
 
 export interface Point {
@@ -8,6 +9,7 @@ export interface Point {
 
 export class EDDSA {
   public name: string;
+  public G: BN;
   public Gx: BN;
   public Gy: BN;
   public p: BN;
@@ -21,6 +23,7 @@ export class EDDSA {
       return new EDDSA(curve);
     }
     this.name = curve.name;
+    this.G = new BN(curve.G, "hex");
     this.Gx = new BN(curve.g.x, "hex");
     this.Gy = new BN(curve.g.y, "hex");
     this.p = new BN(curve.p, "hex");
@@ -76,7 +79,7 @@ export class EDDSA {
     }
 
     if (x1.cmp(x2) === 0 && y1.cmp(y2) === 0) {
-      return this.pointdouble(point1);
+      return this.pointDouble(point1);
     }
 
     if (x1.cmp(x2) === 0 && y1.cmp(y2.neg()) === 0) {
@@ -98,7 +101,7 @@ export class EDDSA {
    * @param point Point of the ec of type `Point`
    * @returns Point of the ec of type `Point`
    */
-  private pointdouble(point: Point): Point {
+  public pointDouble(point: Point): Point {
     const x: BN = point.x;
     const y: BN = point.y;
 
@@ -116,6 +119,27 @@ export class EDDSA {
 
     return { x: x3, y: y3 };
   }
+
+  public pointMul(k: BN, point: Point): Point {
+    if (k.cmp(new BN(0)) === 0) {
+      return { x: new BN(0), y: new BN(0) };
+    }
+    if (this.isInfinity(point)) {
+      return point;
+    }
+    let q: Point = { x: new BN(0), y: new BN(0) };
+    let r: Point = point;
+
+    while (k.cmp(new BN(0)) > 0) {
+      if (k.and(new BN(1)).cmp(new BN(1)) === 0) {
+        q = this.pointAdd(q, r);
+      }
+      r = this.pointDouble(r);
+      k = k.shrn(1);
+    }
+    return q;
+  }
+
 
   /**
    * isInfinity checks if `point` is `Infinity` (represented as `0`) on Elliptic Curve (ec).
@@ -159,4 +183,8 @@ export class EDDSA {
     
     return z;
   }
+  public point(x: BN, y: BN): Point {
+    return { x, y };
+  }
+
 }
