@@ -66,10 +66,11 @@ export class EDDSA {
   public pointAdd(point1: Point, point2: Point): Point {
     // pointAdd computes the sum of two points on the elliptic curve.
     const red = BN.mont(this.p);
-    const x1: BN = point1.x
-    const y1: BN = point1.y
-    const x2: BN = point2.x
-    const y2: BN  = point2.y
+    const x1= new BN(152, 16).toRed(red);
+    const y1 =  new BN(104, 16).toRed(red);
+    const x2 = new BN(5312, 16).toRed(red);
+    const y2  =  new BN(430, 16).toRed(red);
+    
 
     if (this.isInfinity(point1)) {
       return point2;
@@ -85,13 +86,17 @@ export class EDDSA {
     if (x1.cmp(x2) === 0 && y1.cmp(y2.neg()) === 0) {
       return { x: new BN(0), y: new BN(0) };
     }
+    
+    // s = (y2 - y1) / (x2 - x1)
+    const s = y2.redSub(y1).redMul(x2.redSub(x1).redInvm());
 
-    // computes s = (y2 - y1) / (x2 - x1)
-    const s = y2.toRed(red).redSub(y1.toRed(red)).redMul(x2.toRed(red).redSub(x1.toRed(red)).redInvm());
-    // computes x3 = s**2 - x1 - x2
-    const x3 = s.redSqr().redSub(x1.toRed(red)).redSub(x2.toRed(red));
-    // computes y3 = s * (x1 - x3) - y1
-    const y3 = s.redMul(x1.toRed(red).redSub(x3)).redSub(y1.toRed(red));
+    // x3 = s**2 - x1 - x2
+    const x3 = s.redSqr().redSub(x1).redSub(x2);
+    console.log(x3);
+
+    // // computes y3 = s * (x1 - x3) - y1
+    const y3 = s.redMul(x1.redSub(x3)).redSub(y1);
+    console.log(y3);
 
     return { x: x3.fromRed(), y: y3.fromRed() };
   }
@@ -102,20 +107,25 @@ export class EDDSA {
    * @returns Point of the ec of type `Point`
    */
   public pointDouble(point: Point): Point {
-    const x: BN = point.x;
-    const y: BN = point.y;
+    const red = BN.mont(this.p);
+    const a = this.a.toRed(red);
+    const x = point.x.toRed(red);
+    const y = point.y.toRed(red);
 
     if (this.isInfinity(point)) {
       return point;
     }
 
-    const s = this.mulMod(
-      this.addMod(new BN(3), this.mulMod(this.expMod(x, new BN(2)), this.a)),
-      this.expMod(this.addMod(y, y), this.p.sub(new BN(2)))
-    );
+    const redVal2 = new BN(2).toRed(red);
+     const redVal3 = new BN(3).toRed(red);
+    // s = (3 * x**2 + a) / (2 * y)
+    const s = x.redSqr().redIMul(redVal3).redIAdd(a).redMul(y.redInvm().redIMul(redVal2));  
+    
+    // x3 = s**2 - 2 * x
+    const x3 = s.redSqr().redISub(x.redIMul(redVal2));
 
-    const x3 = this.subMod(this.mulMod(s, s), this.addMod(x, x));
-    const y3 = this.subMod(this.mulMod(s, this.subMod(x, x3)), y);
+    // y3 = s * (x - x3) - y
+    const y3 = s.redMul(x.redSub(x3)).redISub(y);
 
     return { x: x3, y: y3 };
   }
@@ -183,6 +193,7 @@ export class EDDSA {
     
     return z;
   }
+  
   public point(x: BN, y: BN): Point {
     return { x, y };
   }

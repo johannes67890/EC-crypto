@@ -1,10 +1,10 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { Point } from "./EDDSA";
-import { EDDSA } from "./EDDSA";
+import { Point } from "./EC";
+import { EDDSA } from "./EC";
 import { hashMsgSHA256 } from "../../util";
 
-interface signature {
+export interface signature {
   r: BN;
   s: BN;
 }
@@ -39,6 +39,7 @@ class Signature extends EDDSA {
       .invm(this.n)
       .mul(new BN(hashedMsg, "hex").add(r.mul(privateKey.x)))
       .mod(this.n);
+    
     return { r, s };
   }
   /**
@@ -72,7 +73,7 @@ class Signature extends EDDSA {
     signature: signature,
     publicKey: Point
   ): boolean {
-
+    
     const sInv = signature.s.invm(this.n);
     const u1 = new BN(hashedMsg, "hex").mul(sInv).mod(this.n);
     const u2 = signature.r.mul(sInv).mod(this.n);

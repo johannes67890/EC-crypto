@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { KeysetContext } from "../App";
 import { ArrowRightIcon, KeyIcon } from "@heroicons/react/24/solid";
-import { Point } from "../curve/EDDSA/EDDSA";
+import { Point } from "../curve/EDDSA/EC";
 import { classNames } from "../util";
 import BN from "bn.js";
 import KeySet from "../curve/EDDSA/keyGeneration";
