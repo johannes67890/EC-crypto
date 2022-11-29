@@ -39,19 +39,21 @@ function test() {
   const priv = eddsa.point(new BN("f80a456519f720cb97b824785ffb9a23902fa6900eec1ca649d0b00d04df9331", "hex"), new BN("0", "hex"))
   const pubX = new BN("4ac418303502389efd91a43a0b249672718796521e764a0aa66c09fc314110b4", "hex");
   const pubY = new BN("530421800fc9f43baedd9748ab20724ed3b36f113cfffd56758d223ddb3d550c","hex");
-  const pub = eddsa.point(pubX, pubY);
+  const pubtest = eddsa.point(pubX, pubY);
+  const pub = eddsa.concatPoint(pubtest);
   const siga: signature = {r: new BN("cf42a9bf740f74575f7b050c81b7f851ebc451608455578d3a40786e6f38605c", "hex") , 
   s: new BN("a218de609adacd99aa1d5242cf9d8fa58eb0094064d2781322c97bab7faef647","hex")}
 
 
-//   const signature = sig.signMsg(message, priv);
-//   const verified = sig.verifyMsg(message, siga, pub);
+  const signature = sig.signMsg(message, priv);
+  const verified = sig.verifyMsg(message, siga, pub);
 
-//   console.log("signature: ", signature);
-//  console.log("Verified: ", verified);
+ // console.log("signature: ", signature);
+ console.log("Verified: ", verified); // true
 
-//eddsa.pointAdd(pub, pub);
-eddsa.pointDouble(pub);
+// //eddsa.pointAdd(pub, pub);
+// console.log(eddsa.pointDouble(pub));
+
 }
 
 

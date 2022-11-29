@@ -194,6 +194,13 @@ export class EDDSA {
     return z;
   }
   
+  public concatPoint(point: Point): BN {
+    const xHex = point.x.toString(16);
+    const yHex = point.y.toString(16);
+    const xyHex = xHex + yHex;
+    const xy = new BN(xyHex, 16);
+    return xy;
+  };
   public point(x: BN, y: BN): Point {
     return { x, y };
   }
