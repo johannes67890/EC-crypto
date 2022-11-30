@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
 import { Point } from "./EC";
-import { EDDSA } from "./EC";
+import { EC } from "./EC";
 import { hashMsgSHA256 } from "../../util";
 
 export interface signature {
@@ -9,7 +9,7 @@ export interface signature {
   s: BN;
 }
 
-class Signature extends EDDSA {
+class Signature extends EC {
   /**
    * Selects a random int `k` in interval `[1,n-1]`.\
    * if `k` is `0`, generate new `k`.\

@@ -1,13 +1,13 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
 import { Point } from "./EC";
-import { EDDSA } from "./EC";
+import { EC } from "./EC";
 import { curveOpt } from "../curvesDefined";
 
 /**
  *
  */
-class KeySet extends EDDSA {
+class KeySet extends EC {
   public publicKey: Point;
   public privateKey: Point;
 
