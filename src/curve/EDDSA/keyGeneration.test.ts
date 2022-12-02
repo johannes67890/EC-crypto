@@ -20,9 +20,14 @@ describe("first", () => {
 
   it("Generate Public key", () => {
     // TODO: test this
+    const ec = new EC(secp256k1);
+
     const privateKey = new KeySet(secp256k1).generatePrivateKey(32);
     const publicKey = new KeySet(secp256k1).generatePublicKey(privateKey);
     expect(publicKey).toBeDefined();
+    expect(publicKey.x).toEqual(privateKey.x.mul(ec.Gx).mod(ec.p));
+    expect(publicKey.y).toEqual(privateKey.y.mul(ec.Gy).mod(ec.p));
+
     expect(publicKey.x.toArray() && publicKey.y.toArray()).toHaveLength(32);
   });
 });
