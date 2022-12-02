@@ -13,8 +13,16 @@ describe("first", () => {
   });
 
   it("Generate Private key", () => {
-    // TODO: test
     const privateKey = new KeySet(secp256k1).generatePrivateKey(32);
     expect(privateKey).toBeDefined();
+    expect(privateKey.x.toArray() && privateKey.y.toArray()).toHaveLength(16);
+  });
+
+  it("Generate Public key", () => {
+    // TODO: test this
+    const privateKey = new KeySet(secp256k1).generatePrivateKey(32);
+    const publicKey = new KeySet(secp256k1).generatePublicKey(privateKey);
+    expect(publicKey).toBeDefined();
+    expect(publicKey.x.toArray() && publicKey.y.toArray()).toHaveLength(32);
   });
 });

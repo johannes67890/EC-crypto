@@ -1,5 +1,4 @@
 import BN from "bn.js";
-import { Buffer } from "buffer";
 import { sha256, utils } from "hash.js";
 
 export function parseBytes(bytes: string) {

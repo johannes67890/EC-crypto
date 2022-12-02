@@ -45,7 +45,7 @@ class KeySet extends EC {
    * @param privateKey of type `Key`
    * @returns typeof `Key`
    */
-  private generatePublicKey(privateKey: Point): Point {
+  public generatePublicKey(privateKey: Point): Point {
     /**
      * TODO: this might be wrong
      * Dubble check

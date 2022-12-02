@@ -13,8 +13,11 @@ describe("Utility functions", () => {
       "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
     );
   });
-  it("Get byes size of type BN ", () => {
-    expect(utils.getByteSize(new BN(0))).toBe(1);
-    expect(utils.getByteSize(new BN("1111222233334444"))).toBe(4);
+
+  it("Get concatenated classNames", () => {
+    expect(utils.classNames("a", "b", "c")).toBe("a b c");
+  });
+  it("Parse Bytes to array", () => {
+    expect(Array.isArray(utils.parseBytes("0x1234567890"))).toEqual(true);
   });
 });
