@@ -50,8 +50,8 @@ class KeySet extends EC {
      * TODO: this might be wrong
      * Dubble check
      */
-    const pubX = this.mulMod(privateKey.x, this.Gx);
-    const pubY = this.mulMod(privateKey.y, this.Gy);
+    const pubX = privateKey.x.mul(this.Gx);
+    const pubY = privateKey.y.mul(this.Gy);
 
     return { x: pubX, y: pubY };
   }

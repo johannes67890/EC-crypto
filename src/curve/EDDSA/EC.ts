@@ -200,6 +200,16 @@ export class EC {
     const xy = new BN(xyHex, 16);
     return xy;
   };
+
+  public decompressPoint(xy: BN): Point {
+    const xHex = xy.toString(16).slice(0, 64);
+    const yHex = xy.toString(16).slice(64, 128);
+    const x = new BN(xHex, 16);
+    const y = new BN(yHex, 16);
+    return { x, y };
+  };
+  
+
   public point(x: BN, y: BN): Point {
     return { x, y };
   }
