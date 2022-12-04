@@ -47,14 +47,14 @@ const KeyTextShowcase: React.FC<{
           )}
          <span className="font-bold">{title}</span>
          <span className="text-sm font-semibold">{holder}</span>
-         {title === "Private Key" ? <KeyDetails keySet={keySet.privateKey}/> : <KeyDetails keySet={keySet.publicKey}/>}
+         {/* {title === "Private Key" ? <KeyDetails keySet={keySet.privateKey}/> : <KeyDetails keySet={keySet.publicKey}/>} */}
          
         </h3>
           <div>
       </div>
-      {title === "Private Key" ? ( 
+      {/* {title === "Private Key" ? ( 
     <KeyCordinates point={keySet.privateKey} />
-      ) : ( <KeyCordinates point={keySet.publicKey} />)}
+      ) : ( <KeyCordinates point={keySet.publicKey} />)} */}
         
       </div>
     </div>

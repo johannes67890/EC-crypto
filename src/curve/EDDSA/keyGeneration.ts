@@ -8,12 +8,12 @@ import { curveOpt } from "../curvesDefined";
  *
  */
 class KeySet extends EC {
-  public publicKey: Point;
-  public privateKey: Point;
+  public publicKey: BN;
+  public privateKey: BN;
 
   constructor(curve: curveOpt) {
     super(curve);
-    const PRIVATE_KEY = this.generatePrivateKey(32);
+    const PRIVATE_KEY = this.generatePrivateKey();
     this.privateKey = PRIVATE_KEY;
     this.publicKey = this.generatePublicKey(PRIVATE_KEY);
   }
@@ -24,20 +24,12 @@ class KeySet extends EC {
    * @param size int of (Pref. even number)
    * @returns typeof `Key`
    */
-  public generatePrivateKey(size: number): Point {
-    let PRIVATE_KEY: Point;
-    if (new BN(size).isEven()) {
-      PRIVATE_KEY = {
-        x: new BN(randomBytes(size / 2), "hex"),
-        y: new BN(randomBytes(size / 2), "hex"),
-      };
-    } else throw new Error("Invalid key size on Private key");
-
-    return PRIVATE_KEY !== undefined
-      ? PRIVATE_KEY
-      : (function () {
-          throw "Private key returned 'undefinied'";
-        })();
+  public generatePrivateKey(): BN {
+    const priv = new BN(randomBytes(32), "hex");
+    if(priv.cmp(this.n) === 1) { 
+      // if priv > n
+      return this.generatePrivateKey();
+    }else return priv;
   }
   /**
    * Generates public key (`Q`) from @param privateKey (`d`) and curve generator point (`G`).\
@@ -45,15 +37,9 @@ class KeySet extends EC {
    * @param privateKey of type `Key`
    * @returns typeof `Key`
    */
-  public generatePublicKey(privateKey: Point): Point {
-    /**
-     * TODO: this might be wrong
-     * Dubble check
-     */
-    const pubX = privateKey.x.mul(this.Gx);
-    const pubY = privateKey.y.mul(this.Gy);
-
-    return { x: pubX, y: pubY };
+  public generatePublicKey(privateKey: BN): BN {
+    
+    return this.mulMod(privateKey, this.G);
   }
 }
 export default KeySet;

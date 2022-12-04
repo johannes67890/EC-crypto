@@ -32,12 +32,21 @@ function test() {
   const ec = new EC(secp256k1);
   const sig = new Signature(secp256k1);
 
-  const p1 = new BN("124", "hex");
-  const p2 = new BN("456", "hex");
-  const p3: Point = { x: p1, y: p2 };
+  const x1 = new BN(15);
+  const y1 = new BN(25);
+  const x2 = new BN(5);
+  const y2 = new BN(155);
 
-  console.log("test", ec.concatPoint(p3).toString("hex"));
-  console.log("1111222233334444: ", new BN("1111222233334444").byteLength());
+  const p1 = ec.point(x1, y1);
+  const p2 = ec.point(x2, y2);
+
+  const res = ec.point(
+    new BN("3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFA4","hex"), 
+    new BN("1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFF830","hex"));
+
+   console.log("output", ec.pointDouble(p1));
+   console.log("res", res);
+   
 }
 
 export default App;

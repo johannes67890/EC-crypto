@@ -118,13 +118,11 @@ export class EC {
     const redVal2 = new BN(2).toRed(red);
      const redVal3 = new BN(3).toRed(red);
     // s = (3 * x**2 + a) / (2 * y)
-    const s = x.redSqr().redIMul(redVal3).redIAdd(a).redMul(y.redInvm().redIMul(redVal2));  
-    
+   const s = x.redSqr().redMul(redVal3).redIAdd(a).redMul(y.redMul(redVal2).redInvm());
     // x3 = s**2 - 2 * x
-    const x3 = s.redSqr().redISub(x.redIMul(redVal2));
-
+    const x3 = s.redSqr().redSub(x.redMul(redVal2));
     // y3 = s * (x - x3) - y
-    const y3 = s.redMul(x.redSub(x3)).redISub(y);
+    const y3 = s.redMul(x.redSub(x3)).redSub(y);
 
     return { x: x3.fromRed(), y: y3.fromRed() };
   }
