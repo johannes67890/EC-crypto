@@ -31,22 +31,6 @@ function test() {
   const alice = new KeySet(secp256k1);
   const ec = new EC(secp256k1);
   const sig = new Signature(secp256k1);
-
-  const x1 = new BN(15);
-  const y1 = new BN(25);
-  const x2 = new BN(5);
-  const y2 = new BN(155);
-
-  const p1 = ec.point(x1, y1);
-  const p2 = ec.point(x2, y2);
-
-  const res = ec.point(
-    new BN("3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFA4","hex"), 
-    new BN("1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFF830","hex"));
-
-   console.log("output", ec.pointDouble(p1));
-   console.log("res", res);
-   
 }
 
 export default App;

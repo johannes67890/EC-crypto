@@ -3,7 +3,7 @@ import KeySet from "./keyGeneration";
 import { secp256k1 } from "../curvesDefined";
 import { BN } from "bn.js";
 
-describe("first", () => {
+describe("Keys", () => {
   const keySet = new KeySet(secp256k1);
 
   it("Generate Keypair", () => {

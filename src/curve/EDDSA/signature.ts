@@ -23,23 +23,33 @@ class Signature extends EC {
    * @param privateKey Private key used to sign message
    * @returns Digital signature `Point`.
    */
-  private sign(hashedMsg: BN, privateKey: Point): signature {
+  private sign(
+    hashedMsg: BN,
+    privateKey: Point,
+    preK?: BN | undefined
+  ): signature {
     //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
     // generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;
-    
-    do {
-      k = new BN(randomBytes(32), "hex");
-    } while (k.eqn(0));
+
+    if (preK) {
+      k = preK;
+    } else {
+      do {
+        k = new BN(randomBytes(32), "hex");
+      } while (k.eqn(0));
+    }
 
     // r = (x1, y1) = kG
-    const r = this.mulMod(k, this.Gx);
+    let point = this.pointMul(k, this.decompressPoint(this.G));
+    const r = point.x;
+
     // s = (x2, y2) = k^-1 * (h + d * r) mod n
     const s = k
       .invm(this.n)
       .mul(hashedMsg.add(r.mul(privateKey.x)))
       .mod(this.n);
-    
+
     return { r, s };
   }
   /**
@@ -48,11 +58,9 @@ class Signature extends EC {
    * @param privateKey private key
    * @returns Point of signature
    */
-  public signMsg(message: string, privateKey: Point): signature {
+  public signMsg(message: string, privateKey: Point, k?: BN): signature {
     const hashedMsg = hashMsgSHA256(message);
-    console.log("Sign hashedMsg: ", hashedMsg);
-
-    return this.sign(hashedMsg, privateKey);
+    return this.sign(hashedMsg, privateKey, k);
   }
   /**
    * Verifies digital signature.\
@@ -68,26 +76,20 @@ class Signature extends EC {
    * @param publicKey public key of signer
    * @returns boolean; true if signature is valid
    */
-  private verify(
-    hashedMsg: BN,
-    signature: signature,
-    publicKey: BN
-  ): boolean {
-    const r = signature.r
-    const s = signature.s
-   
-    if(r.gt(this.n) || s.gt(this.n)){
+  private verify(hashedMsg: BN, signature: signature, publicKey: BN): boolean {
+    const r = signature.r;
+    const s = signature.s;
+
+    if (r.gt(this.n) || s.gt(this.n)) {
       throw new Error("Invalid signature");
     }
-  
-   
+
     const z = hashedMsg.shln(this.n.bitLength());
-    console.log(z.bitLength(), ">", this.n.bitLength());
-  
+
     const sInv = s.invm(this.n);
-    
-    const u1 = (z.mul(sInv)).mul(this.G).mod(this.n);
-    const u2 = (r.mul(sInv)).mul(publicKey).mod(this.n);
+
+    const u1 = z.mul(sInv).mul(this.G).mod(this.n);
+    const u2 = r.mul(sInv).mul(publicKey).mod(this.n);
 
     const R = u1.add(u2).mod(this.n);
 
@@ -106,13 +108,12 @@ class Signature extends EC {
     publicKey: Point
   ): boolean {
     const hashedMsg = hashMsgSHA256(message);
-    if(!this.isOnCurve(publicKey)){
+    if (!this.isOnCurve(publicKey)) {
       throw new Error("Invalid public key");
     } else {
-      const pub = this.concatPoint(publicKey)
+      const pub = this.concatPoint(publicKey);
       return this.verify(hashedMsg, signature, pub);
     }
-
   }
 }
 export default Signature;
