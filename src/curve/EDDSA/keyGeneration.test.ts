@@ -37,6 +37,9 @@ describe("first", () => {
       "d8a3e187367ae5bd066da4b9ea617b020eedfb2bf0a13ad4b931413acc4b64fb532717eca31adb098ae64c01fd4acd44c767011d75ff949e248763e3a68ee50f",
       "hex"
     );
+    expect(priv && pub).toBeDefined();
+    expect(priv.byteLength()).toEqual(32);
+    expect(pub.byteLength()).toEqual(64);
     expect(keySet.generatePublicKey(priv).eq(pub)).toBeTruthy();
   });
 });
