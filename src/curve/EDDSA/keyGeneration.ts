@@ -26,10 +26,10 @@ class KeySet extends EC {
    */
   public generatePrivateKey(): BN {
     const priv = new BN(randomBytes(32), "hex");
-    if(priv.cmp(this.n) === 1) { 
+    if (priv.cmp(this.n) === 1) {
       // if priv > n
       return this.generatePrivateKey();
-    }else return priv;
+    } else return priv;
   }
   /**
    * Generates public key (`Q`) from @param privateKey (`d`) and curve generator point (`G`).\
@@ -38,8 +38,8 @@ class KeySet extends EC {
    * @returns typeof `Key`
    */
   public generatePublicKey(privateKey: BN): BN {
-    
-    return this.mulMod(privateKey, this.G);
+    const pubPoint = this.pointMul(privateKey, this.point(this.Gx, this.Gy));
+    return this.concatPoint(pubPoint);
   }
 }
 export default KeySet;
