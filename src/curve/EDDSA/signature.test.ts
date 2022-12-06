@@ -37,14 +37,40 @@ describe("ECDSA", () => {
   });
 
   it("Validate signature", () => {
+    const keySet = new KeySet(secp256k1);
+    const { privateKey, publicKey } = keySet;
     const message = "ECDSA is the most fun I have ever experienced";
-    const sig = signature.signMsg(message, ec.decompressPoint(privateKey));
 
+    const sig = signature.signMsg(message, ec.decompressPoint(privateKey));
     const valid = signature.verifyMsg(
       message,
       sig,
       ec.decompressPoint(publicKey)
     );
+
     expect(valid).toBeTruthy();
+
+    const message2 = "ECDSA is the most fun I have ever experienced";
+    const pubx = new BN(
+      "4AEAF55040FA16DE37303D13CA1DDE85F4CA9BAA36E2963A27A1C0C1165FE2B1",
+      "hex"
+    );
+    const puby = new BN(
+      "1511A626B232DE4ED05B204BD9ECCAF1B79F5752E14DD1E847AA2F4DB6A52768",
+      "hex"
+    );
+    const r = new BN(
+      "F01D6B9018AB421DD410404CB869072065522BF85734008F105CF385A023A80F",
+      "hex"
+    );
+    const s = new BN(
+      "A3243A18521B20DC80A8798A1A36463FFE8279574127DA214D39E6B34134305B",
+      "hex"
+    );
+
+    const sig2: signature = { r, s };
+
+    const valid2 = signature.verifyMsg(message2, sig2, ec.point(pubx, puby));
+    expect(valid2).toBeTruthy();
   });
 });

@@ -84,14 +84,19 @@ class Signature extends EC {
       throw new Error("Invalid signature");
     }
 
-    const z = hashedMsg.shln(this.n.bitLength());
-
     const sInv = s.invm(this.n);
+    const u1 = hashedMsg.mul(sInv).mod(this.n);
+    const u2 = r.mul(sInv).mod(this.n);
 
-    const u1 = z.mul(sInv).mul(this.G).mod(this.n);
-    const u2 = r.mul(sInv).mul(publicKey).mod(this.n);
+    if (hashedMsg.byteLength() > 32) {
+      throw new Error("Hashed message is too long");
+    }
 
-    const R = u1.add(u2).mod(this.n);
+    const p1 = this.pointMul(u1, this.decompressPoint(this.G));
+
+    const p2 = this.pointMul(u2, this.decompressPoint(publicKey));
+
+    const R = this.pointAdd(p1, p2).x;
 
     return r.eq(R);
   }
