@@ -14,7 +14,7 @@ class Signature extends EC {
    * Selects a random int `k` in interval `[1,n-1]`.\
    * if `k` is `0`, generate new `k`.\
    * \
-   * Compute inverse modulo of point `r`\
+   * Compute Point multiplication of point `r`\
    * (where `r` y-cordinat is ignored: `r = x1`)
    * \
    *  computes `s` = (k^-1 * (h + r * d)) % n
@@ -28,8 +28,7 @@ class Signature extends EC {
     privateKey: Point,
     preK?: BN | undefined
   ): signature {
-    //Method used: https://learnmeabitcoin.com/technical/ecdsa#elliptic-curves
-    // generate random k (nonce) in interval [1,n-1] where n is order of curve
+    // Generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;
 
     if (preK) {
@@ -68,7 +67,7 @@ class Signature extends EC {
    * Computes Inverse signature `s` -> `sInv` = `s^-1` mod `n`\
    * Computes `u1` = `Msg * sInv` mod `n`\
    * Computes `u2` = `r * sInv` mod `n`\
-   * Computes `r` = `u1 * Gx + u2 * Qx` mod `n`\
+   * Computes `r` = `u1 * G + u2 * Q` mod `n`\
    * \
    * If `r` == `signature.r` return `true` else `false`
    * @param hashedMsg Hashed message to be verified
@@ -116,7 +115,7 @@ class Signature extends EC {
     if (!this.isOnCurve(publicKey)) {
       throw new Error("Invalid public key");
     } else {
-      const pub = this.concatPoint(publicKey);
+      const pub = this.pointToBN(publicKey);
       return this.verify(hashedMsg, signature, pub);
     }
   }

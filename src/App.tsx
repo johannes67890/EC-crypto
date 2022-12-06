@@ -14,7 +14,6 @@ const alice = new KeySet(secp256k1);
 export const KeysetContext = createContext([bob, alice]);
 
 function App() {
-  test();
   return (
     <div className="max-w-6xl mx-auto">
       <Header />
@@ -24,13 +23,6 @@ function App() {
       </KeysetContext.Provider>
     </div>
   );
-}
-
-function test() {
-  const bob = new KeySet(secp256k1);
-  const alice = new KeySet(secp256k1);
-  const ec = new EC(secp256k1);
-  const sig = new Signature(secp256k1);
 }
 
 export default App;

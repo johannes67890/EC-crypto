@@ -22,11 +22,7 @@ export function getRandomInt(min: number, max: number): number {
 export function getByteSize(val: BN) {
   return val.byteLength();
 }
+
 export function classNames(...classes: (false | null | undefined | string)[]) {
   return classes.filter(Boolean).join(" "); // function to combind classNames
 }
-
-export function uint256(x: any) {
-  return new BN(x);
-}
-

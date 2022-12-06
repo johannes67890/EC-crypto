@@ -1,5 +1,5 @@
-import { EC, Point } from "./EC";
-import { BN, red } from "bn.js";
+import { EC } from "./EC";
+import { BN } from "bn.js";
 import { secp256k1 } from "../curvesDefined";
 import KeySet from "./keyGeneration";
 
@@ -13,25 +13,17 @@ describe("EC", () => {
      * y = 1AE168FEA63DC339A3C58419466CEAEEF7F632653266D0E1236431A950CFE52A
      */
 
-    const {privateKey, publicKey} = new KeySet(secp256k1);
-    const x = new BN(
-      "0C6047F9441ED7D6D3045406E95C07CD85C778E4B8CEF3CA7ABAC09B95C709EE5",
-      "hex"
-    );
-    const y = new BN(
-      "1AE168FEA63DC339A3C58419466CEAEEF7F632653266D0E1236431A950CFE52A",
-      "hex"
-    );
+    const { publicKey } = new KeySet(secp256k1);
 
-    // expect(ec.isOnCurve(publicKey)).toBe(true);
+    expect(ec.isOnCurve(ec.decompressPoint(publicKey))).toBeTruthy();
   });
-  // it("Check if point is infinity", () => {
-  //   expect(ec.isInfinity({ x: new BN(0), y: new BN(0) })).toBe(true);
-  //   expect(ec.isInfinity({ x: new BN(1), y: new BN(1) })).toBe(false);
-  // });
+  it("Check if point is infinity", () => {
+    expect(ec.isInfinity({ x: new BN(0), y: new BN(0) })).toBe(true);
+    expect(ec.isInfinity({ x: new BN(1), y: new BN(1) })).toBe(false);
+  });
   it("concat Points", () => {
     expect(
-      ec.concatPoint({ x: new BN("123", "hex"), y: new BN("456", "hex") })
+      ec.pointToBN({ x: new BN("123", "hex"), y: new BN("456", "hex") })
     ).toEqual(new BN("123456", "hex"));
   });
 });
@@ -61,36 +53,48 @@ describe("Efficient Implementation of Elliptic Curves", () => {
   const x2 = new BN(5);
   const y2 = new BN(155);
 
-  const p1 = ec.point(x1, y1);
-  const p2 = ec.point(x2, y2);
+  const p1 = ec.concatPoint(x1, y1);
+  const p2 = ec.concatPoint(x2, y2);
 
   it("Point Addition", () => {
-  // Works but not same format as function.
-
-  //   expect(ec.pointAdd({ x: x1, y: y1 }, { x: x2, y: y2 })).toBe<Point>({
-  //     x: new BN(149),
-  //     y: new BN(1717)  
-  // });
+    // Pre-computed result
+    expect(
+      ec.pointAdd(p1, p2).x.eq(new BN(149)) &&
+        ec.pointAdd(p1, p2).y.eq(new BN(1717))
+    ).toBeTruthy();
   });
+
   it("Point Multiplication", () => {
-   // Works but not same format as function.
-
-    
-    // console.log(ec.pointMul(new BN(2),  ec.point(ec.Gx,ec.Gy)));	
-    
-    // expect(ec.pointMul(new BN(2), ec.point(ec.Gx,ec.Gy) )).toBe<Point>({
-    //   x: new BN("c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5", "hex"),
-    //   y: new BN("1ae168fea63dc339a3c58419466ceaeef7f632653266d0e1236431a950cfe52a","hex")
-    // });
+    // Pre-computed result (res)
+    const resX = new BN(
+      "c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "hex"
+    );
+    const resY = new BN(
+      "1ae168fea63dc339a3c58419466ceaeef7f632653266d0e1236431a950cfe52a",
+      "hex"
+    );
+    expect(
+      ec.pointMul(new BN(2), ec.concatPoint(ec.Gx, ec.Gy)).x.eq(resX) &&
+        ec.pointMul(new BN(2), ec.concatPoint(ec.Gx, ec.Gy)).y.eq(resY)
+    ).toBeTruthy();
   });
-  it("Point Doubling", () => {
-    // Works but not same format as function.
 
-    // const res = ec.point(new BN(
-    //   "3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFA4","hex"), 
-    //   new BN("1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFF830","hex"));
-    // console.log(ec.pointDouble(p1) == res);
-    
-    // expect(ec.pointDouble(p1)).toEqual<Point>(res)
+  it("Point Doubling", () => {
+    // Pre-computed result (res)
+    const res = ec.concatPoint(
+      new BN(
+        "3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFA4",
+        "hex"
+      ),
+      new BN(
+        "1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFF830",
+        "hex"
+      )
+    );
+
+    expect(
+      ec.pointDouble(p1).x.eq(res.x) && ec.pointDouble(p1).y.eq(res.y)
+    ).toBeTruthy();
   });
 });

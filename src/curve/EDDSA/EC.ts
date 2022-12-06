@@ -1,5 +1,4 @@
 import BN from "bn.js";
-import { uint256 } from "../../util";
 import { curveOpt } from "../curvesDefined";
 
 export interface Point {
@@ -97,7 +96,8 @@ export class EC {
   }
 
   /**
-   * pointdouble
+   * pointdouble computes the sum of two points on the elliptic curve.
+   *
    * @param point Point of the ec of type `Point`
    * @returns Point of the ec of type `Point`
    */
@@ -126,7 +126,13 @@ export class EC {
 
     return { x: x3.fromRed(), y: y3.fromRed() };
   }
-
+  /**
+   * pointMul multiplies a `point` by the scalar `k`.
+   *
+   * @param k Amount to multiply by.
+   * @param point point to multiply.
+   * @returns New ``point``.
+   */
   public pointMul(k: BN, point: Point): Point {
     if (k.cmp(new BN(0)) === 0) {
       return { x: new BN(0), y: new BN(0) };
@@ -190,7 +196,13 @@ export class EC {
     return z;
   }
 
-  public concatPoint(point: Point): BN {
+  /**
+   * Converts a point to a BN.\
+   *
+   * @param point Point to convert of type `Point`
+   * @returns New BN
+   */
+  public pointToBN(point: Point): BN {
     const xHex = point.x.toString(16);
     const yHex = point.y.toString(16);
     const xyHex = xHex + yHex;
@@ -198,6 +210,12 @@ export class EC {
     return xy;
   }
 
+  /**
+   * Decompresses a point from a BN.\
+   *
+   * @param xy Point to decompress of type `BN`
+   * @returns New Point
+   */
   public decompressPoint(xy: BN): Point {
     const xHex = xy.toString(16).slice(0, 64);
     const yHex = xy.toString(16).slice(64, 128);
@@ -205,8 +223,14 @@ export class EC {
     const y = new BN(yHex, 16);
     return { x, y };
   }
-
-  public point(x: BN, y: BN): Point {
+  /**
+   * ConcatPoint concatenates two BNs into a point.\
+   *
+   * @param x x coordinate of the point
+   * @param y y coordinate of the point
+   * @returns New `Point`
+   */
+  public concatPoint(x: BN, y: BN): Point {
     return { x, y };
   }
 }

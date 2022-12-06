@@ -7,8 +7,6 @@ import BN from "bn.js";
 describe("ECDSA", () => {
   const ec = new EC(secp256k1);
   const signature = new Signature(secp256k1);
-  const keySet = new KeySet(secp256k1);
-  const { privateKey, publicKey } = keySet;
 
   it("should sign a signature", () => {
     // pre generated signature
@@ -50,6 +48,7 @@ describe("ECDSA", () => {
 
     expect(valid).toBeTruthy();
 
+    // pre generated signature
     const message2 = "ECDSA is the most fun I have ever experienced";
     const pubx = new BN(
       "4AEAF55040FA16DE37303D13CA1DDE85F4CA9BAA36E2963A27A1C0C1165FE2B1",
@@ -70,7 +69,11 @@ describe("ECDSA", () => {
 
     const sig2: signature = { r, s };
 
-    const valid2 = signature.verifyMsg(message2, sig2, ec.point(pubx, puby));
+    const valid2 = signature.verifyMsg(
+      message2,
+      sig2,
+      ec.concatPoint(pubx, puby)
+    );
     expect(valid2).toBeTruthy();
   });
 });
