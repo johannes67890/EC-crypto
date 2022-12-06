@@ -1,59 +1,51 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { Point } from "./index";
-import { EDDSA } from ".";
+import { EC } from "./EC";
 import { curveOpt } from "../curvesDefined";
 
 /**
+ * Generates a new key pair, private and public key.
  *
+ * @class KeySet
+ * @description Generates a new key pair
+ * @param curve of type `curveOpt`
+ * @returns `KeySet` object
  */
-class KeySet extends EDDSA {
-  public publicKey: Point;
-  public privateKey: Point;
+class KeySet extends EC {
+  public publicKey: BN;
+  public privateKey: BN;
 
   constructor(curve: curveOpt) {
     super(curve);
-    const PRIVATE_KEY = this.generatePrivateKey(32);
+    const PRIVATE_KEY = this.generatePrivateKey();
     this.privateKey = PRIVATE_KEY;
     this.publicKey = this.generatePublicKey(PRIVATE_KEY);
   }
 
   /**
-   * Generate random `size` or 32 byte size private Key\
+   * Generate random 32 byte size private Key\
    *
-   * @param size int of (Pref. even number)
-   * @returns typeof `Key`
+   * @returns typeof `BN`
    */
-  public generatePrivateKey(size: number): Point {
-    let PRIVATE_KEY: Point;
-    if (new BN(size).isEven()) {
-      PRIVATE_KEY = {
-        x: new BN(randomBytes(size / 2), "hex"),
-        y: new BN(randomBytes(size / 2), "hex"),
-      };
-    } else throw new Error("Invalid key size on Private key");
-
-    return PRIVATE_KEY !== undefined
-      ? PRIVATE_KEY
-      : (function () {
-          throw "Private key returned 'undefinied'";
-        })();
+  public generatePrivateKey(): BN {
+    const priv = new BN(randomBytes(32), "hex");
+    if (priv.cmp(this.n) === 1) {
+      // if priv > n
+      return this.generatePrivateKey();
+    } else return priv;
   }
   /**
    * Generates public key (`Q`) from @param privateKey (`d`) and curve generator point (`G`).\
    * Formular: `Q=dG`
-   * @param privateKey of type `Key`
-   * @returns typeof `Key`
+   * @param privateKey of type `BN`
+   * @returns typeof `BN`
    */
-  private generatePublicKey(privateKey: Point): Point {
-    /**
-     * TODO: this might be wrong
-     * Dubble check
-     */
-    const pubX = this.mulMod(privateKey.x, this.Gx);
-    const pubY = this.mulMod(privateKey.y, this.Gy);
-
-    return { x: pubX, y: pubY };
+  public generatePublicKey(privateKey: BN): BN {
+    const pubPoint = this.pointMul(
+      privateKey,
+      this.concatPoint(this.Gx, this.Gy)
+    );
+    return this.pointToBN(pubPoint);
   }
 }
 export default KeySet;

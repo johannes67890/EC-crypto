@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <div className="max-w-5xl mx-auto rounded-t-md flex gap-2 border-b border-gray-300">
+    <div className="mx-auto rounded-t-md flex gap-2 border-b border-gray-300">
       <div className="flex flex-col p-3">
         <h1 className="text-4xl">Eliptic-Curves</h1>
         <span className="text-center italic border-b mb-1 pb-2">
