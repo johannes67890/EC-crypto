@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
     "@types/node": "^18.11.11",
-    "@webpack-cli/generators": "^2.5.0",
+    "@webpack-cli/generators": "^3.0.1",
     "hash.js": "^1.1.7",
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.2.5",
