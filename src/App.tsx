@@ -4,9 +4,6 @@ import { secp256k1 } from "./curve/curvesDefined";
 import Header from "./frontend/Header";
 import Menu from "./frontend/Menu";
 import Keys from "./frontend/Keys";
-import { EC, Point } from "./curve/EDDSA/EC";
-import Signature, { signature } from "./curve/EDDSA/signature";
-import { BN } from "bn.js";
 
 const bob = new KeySet(secp256k1);
 const alice = new KeySet(secp256k1);

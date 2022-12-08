@@ -1,5 +1,5 @@
 import BN from "bn.js";
-import { curveOpt } from "../curvesDefined";
+import { curveOpt } from "./curvesDefined";
 
 export interface Point {
   x: BN;

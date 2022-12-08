@@ -1,4 +1,4 @@
-import { EC } from './curve/EDDSA/EC';
+import { EC } from './curve/EC';
 import KeySet from "./curve/EDDSA/keyGeneration";
 import Signature from "./curve/EDDSA/signature";
 import { secp256k1 } from './curve/curvesDefined';

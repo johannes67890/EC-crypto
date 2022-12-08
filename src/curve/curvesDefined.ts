@@ -1,4 +1,5 @@
 import { sha256 } from "hash.js";
+
 export interface curveOpt {
   name: string; // Name of the curve
   prime: string; // modulo prime number p
