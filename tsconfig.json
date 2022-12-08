@@ -1,4 +1,10 @@
 {
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
@@ -9,5 +15,5 @@
     "allowJs": true,
     "jsx": "react"
   },
-  "files": ["src/index.tsx"]
+  "include": ["src/**/*"],
 }

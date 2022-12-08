@@ -1,5 +1,5 @@
 import { secp256k1 } from "../curvesDefined";
-import { EC } from "./EC";
+import { EC } from "../EC";
 import Signature, { signature } from "./signature";
 import KeySet from "./keyGeneration";
 import BN from "bn.js";

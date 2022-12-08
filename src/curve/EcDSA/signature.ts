@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { Point } from "./EC";
-import { EC } from "./EC";
+import { Point } from "../EC";
+import { EC } from "../EC";
 import { hashMsgSHA256 } from "../../util";
 
 export interface signature {
@@ -26,7 +26,7 @@ class Signature extends EC {
   private sign(
     hashedMsg: BN,
     privateKey: Point,
-    preK?: BN | undefined
+    preK?: BN | undefined,
   ): signature {
     // Generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;

@@ -1,4 +1,4 @@
-import { EC } from "./EC";
+import { EC } from "../EC";
 import KeySet from "./keyGeneration";
 import { secp256k1 } from "../curvesDefined";
 import { BN } from "bn.js";
