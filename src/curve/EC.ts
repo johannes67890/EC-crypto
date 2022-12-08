@@ -197,7 +197,7 @@ export class EC {
   }
 
   /**
-   * Converts a point to a BN.\
+   * Converts point to a BN.\
    *
    * @param point Point to convert of type `Point`
    * @returns New BN

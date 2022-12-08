@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "cdm": "ts-node ./src/cdm.ts",
+    "cdm": "ts-node ./src/App.ts",
     "build": "webpack --mode=production --node-env=production",
     "test": "jest",
     "eject": "react-scripts eject",

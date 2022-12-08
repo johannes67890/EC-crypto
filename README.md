@@ -1,46 +1,112 @@
-# Getting Started with Create React App
+# EC-crypto
+## Table of Contents
+- [Install](#install)
+- [Usage](#usage)
+- [Showcase](#showcase)
+- [Instructions](#instructions)
+- [Supported Curves](#supported-curves)
+- [3rd party libraries used](#supported-curves)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Install
+Clone and install this Github repository
+```git 
+git clone https://github.com/johannes67890/EC-crypto.git
+```
+```
+npm install
+```
 
-## Available Scripts
+## Usage
+```js
+// Run command prompt application
+> npm run cdm
 
-In the project directory, you can run:
+// Run test of the applications functions
+> npm run test
+```
+## Elliptic Curve Digital Signature Algorithm
+### Showcase
+```typescript
+// Create and initialize EC & signature context
+const ec = new EC(secp256k1); 
+const signature = new Signature(secp256k1);
 
-### `npm start`
+// Generate key pair
+const keySet = new KeySet(secp256k1);
+const {privateKey, publicKey } = keySet;
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+// Sign message
+const message = "Hello World!";
+// Hashed message with SHA256.
+const HashedMsg = hashMsgSHA256(message)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+const signatureValue = signature.signMsg(message, ec.decompressPoint(privateKey)); // Decopmress private key to match signature function.
+    
+// Verify signature
 
-### `npm test`
+const verify = signature.verifyMsg(message, signatureValue, ec.decompressPoint(publicKey)); // Decopmress public key to match signature function.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+console.log("Verify: ", verify); // Return true or false
+```
 
-### `npm run build`
+# Instructions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Types
+```typescript
+// Holds x & y cordinats of the corresponding Point 
+interface Point {
+  x: BN;
+  y: BN;
+}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+interface signature {
+// Holds r & s cordinats of the corresponding signature 
+  r: BN;
+  s: BN;
+}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Functions
+### Utils
+* `isOnCurve(Point)` - Check if `Point` is on curve.
+* `isInfinity(Point)` - Check if `Point` is Infinity
+* `pointToBN(Point)` - Converts type `Point` to a `BN` instance
+* `decompressPoint(BN)` - Converts `BN` to type `Point`
+* `concatPoint(x: BN, y: BN)` - Concatenates two `BN` instances into type `Point`
+* `hashMsgSHA256(string)` - Hashes `string` with SHA256
+### Arithmetic for Elliptic Curves
+* `addMod(x: BN, y: BN)` - addMod computes `z = (x + y) % p`
+* `subMod(x: BN, y: BN)` - subMod computes `z = (x - y) % p`
+* `mulMod(x: BN, y: BN)` - mulMod computes `z = (x * y) % p`
+* `expMod(x: BN, y: BN)` - expMod computes `z = (x^^y) % p`
+### Efficient Implementations of Elliptic Curves
+* `pointAdd(Point1, Point2)` - Computes the sum of two points on the elliptic curve.
 
-### `npm run eject`
+* `pointDouble(Point)` - Computes the sum of two points on the elliptic curve.
+* `pointMul(k: BN, Point)` - multiplies a `point` by the scalar `k`
+### Digital Signatures
+* `signMsg(msg, privateKey)` - Returns a `signature` from a message `msg`, with the corresponding `PrivateKey`
+* `verifyMsg(msg, signature, publicKey)` - Returns `True` or `False` if the signature is valied corresponding to the `publicKey` and `msg`
+### Key generation 
+* `generatePrivateKey()` - Generates a `BN` instance of a random 32 byte size private Key.
+* `generatePublicKey(privateKey: BN)` - Generates a `BN` instance of a public key from `privateKey`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**NOTE**: Generate a key pair by initializing `new KeySet(curve)`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### example
+```typescript 
+// Generate key pair
+const keySet = new KeySet(secp256k1);
+const {privateKey, publicKey } = keySet;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Supported Curves
+* `Secp256k1`
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+**More under development**
+## 3rd party libaries used
+## [bn.js](https://github.com/indutny/bn.js)
+## [jest](https://github.com/facebook/jest)
+## [hash.js](https://github.com/indutny/hash.js)
+# [Back to the top](#ec-crypto)
