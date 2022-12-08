@@ -1,4 +1,5 @@
 # EC-crypto
+Visual demonstration of Elliptic-curve cryptography in the command prompt.
 ## Table of Contents
 - [Install](#install)
 - [Usage](#usage)
