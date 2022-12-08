@@ -85,7 +85,7 @@ interface signature {
 * `pointDouble(Point)` - Computes the sum of two points on the elliptic curve.
 * `pointMul(k: BN, Point)` - multiplies a `point` by the scalar `k`
 ### Digital Signatures
-* `signMsg(msg, privateKey)` - Returns a `signature` from a message `msg`, with the corresponding `PrivateKey`
+* `signMsg(msg, privateKey, k?)` - Returns a `signature` from a message `msg`, with the corresponding `PrivateKey` (Precomputed `k` is optional)
 * `verifyMsg(msg, signature, publicKey)` - Returns `True` or `False` if the signature is valied corresponding to the `publicKey` and `msg`
 ### Key generation 
 * `generatePrivateKey()` - Generates a `BN` instance of a random 32 byte size private Key.

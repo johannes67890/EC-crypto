@@ -1,6 +1,6 @@
 import { EC } from './curve/EC';
-import KeySet from "./curve/EDDSA/keyGeneration";
-import Signature from "./curve/EDDSA/signature";
+import KeySet from "./curve/EcDSA/keyGeneration";
+import Signature from "./curve/EcDSA/signature";
 import { secp256k1 } from './curve/curvesDefined';
 import { hashMsgSHA256 } from './util';
 import chalk from 'chalk';

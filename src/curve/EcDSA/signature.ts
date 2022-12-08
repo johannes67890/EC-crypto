@@ -26,13 +26,18 @@ class Signature extends EC {
   private sign(
     hashedMsg: BN,
     privateKey: Point,
+    preK?: BN | undefined,
   ): signature {
     // Generate random k (nonce) in interval [1,n-1] where n is order of curve
     let k: BN;
 
+    if (preK) {
+      k = preK;
+    } else {
       do {
         k = new BN(randomBytes(32), "hex");
       } while (k.eqn(0));
+    }
 
     // r = (x1, y1) = kG
     let point = this.pointMul(k, this.decompressPoint(this.G));
@@ -52,9 +57,9 @@ class Signature extends EC {
    * @param privateKey private key
    * @returns Point of signature
    */
-  public signMsg(message: string, privateKey: Point): signature {
+  public signMsg(message: string, privateKey: Point, k?: BN): signature {
     const hashedMsg = hashMsgSHA256(message);
-    return this.sign(hashedMsg, privateKey);
+    return this.sign(hashedMsg, privateKey, k);
   }
   /**
    * Verifies digital signature.\

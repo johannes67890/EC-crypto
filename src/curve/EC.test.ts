@@ -1,7 +1,7 @@
 import { EC } from "./EC";
 import { BN } from "bn.js";
 import { secp256k1 } from "./curvesDefined";
-import KeySet from "./EDDSA/keyGeneration";
+import KeySet from "./EcDSA/keyGeneration";
 
 describe("EC", () => {
   const ec = new EC(secp256k1);
