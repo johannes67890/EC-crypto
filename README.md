@@ -36,16 +36,14 @@ const signature = new Signature(secp256k1);
 const keySet = new KeySet(secp256k1);
 const {privateKey, publicKey } = keySet;
 
-// Sign message
+// Message to sign
 const message = "Hello World!";
-// Hashed message with SHA256.
-const HashedMsg = hashMsgSHA256(message)
 
-const signatureValue = signature.signMsg(message, ec.decompressPoint(privateKey)); // Decopmress private key to match signature function.
+// Sign: Hashes and signs thhe decopmressed private key to the signature function.
+const signatureValue = signature.signMsg(message, ec.decompressPoint(privateKey)); 
     
-// Verify signature
-
-const verify = signature.verifyMsg(message, signatureValue, ec.decompressPoint(publicKey)); // Decopmress public key to match signature function.
+// Verify: Decopmress public key to verify match of signature function.
+const verify = signature.verifyMsg(message, signatureValue, ec.decompressPoint(publicKey)); 
 
 console.log("Verify: ", verify); // Return true or false
 ```
@@ -83,7 +81,7 @@ interface signature {
 ### Efficient Implementations of Elliptic Curves
 * `pointAdd(Point1, Point2)` - Computes the sum of two points on the elliptic curve.
 
-* `pointDouble(Point)` - Computes the sum of two points on the elliptic curve.
+* `pointDouble(Point)` - If two points are coincident, Computes point doubling of the point on the elliptic curve.
 * `pointMul(k: BN, Point)` - multiplies a `point` by the scalar `k`
 ### Digital Signatures
 * `signMsg(msg, privateKey, k?)` - Returns a `signature` from a message `msg`, with the corresponding `PrivateKey` (Precomputed `k` is optional)
@@ -98,7 +96,7 @@ interface signature {
 ```typescript 
 // Generate key pair
 const keySet = new KeySet(secp256k1);
-const {privateKey, publicKey } = keySet;
+const { privateKey, publicKey } = keySet;
 ```
 
 
