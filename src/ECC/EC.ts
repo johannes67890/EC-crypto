@@ -6,7 +6,7 @@ export interface Point {
   y: BN;
 }
 
-export class EC {
+class EC {
   public name: string;
   public G: BN;
   public Gx: BN;
@@ -234,3 +234,4 @@ export class EC {
     return { x, y };
   }
 }
+export default EC;

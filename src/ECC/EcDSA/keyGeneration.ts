@@ -1,8 +1,7 @@
 import BN from "bn.js";
 import { randomBytes } from "crypto";
-import { EC } from "../EC";
+import EC from "../EC";
 import { curveOpt } from "../curvesDefined";
-
 /**
  * Generates a new key pair, private and public key.
  *
@@ -14,7 +13,7 @@ import { curveOpt } from "../curvesDefined";
 class KeySet extends EC {
   public publicKey: BN;
   public privateKey: BN;
-
+  
   constructor(curve: curveOpt) {
     super(curve);
     const PRIVATE_KEY = this.generatePrivateKey();
