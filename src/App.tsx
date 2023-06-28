@@ -1,10 +1,11 @@
 import './App.css'
+import Canvas from './components/canvas'
 
 function App() {
   
   return (
     <>
-      <h1>React 18 Alpha</h1>
+      <Canvas height={500} width={500} />
     </>
   )
 }
