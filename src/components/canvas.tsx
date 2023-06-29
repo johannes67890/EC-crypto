@@ -1,12 +1,10 @@
-import { log } from "console";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import React, { Component } from 'react'
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
+// https://codeguppy.com/code.html?Y5OJoQCN2rQnq5UlZaBk
 type CanvasProps = {
-    height?: number
-    width?: number
-}
-
-type CanvasCord = {
+    height: number
+    width: number
     gridSize: number
     x_dis_gridlines: number
     y_dis_gridlines: number
@@ -14,28 +12,57 @@ type CanvasCord = {
     y_start: {val: number, suffix: any}
 }
 
+
+
 const Canvas = (props: CanvasProps) => {
-    const defaltCord: CanvasCord = {gridSize: 25, x_dis_gridlines: 5, y_dis_gridlines: 5, x_start: {val: 1, suffix: '\u03a0'}, y_start: {val: 1, suffix: ''}}
-
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const ctx = canvasRef.current?.getContext('2d');
-    if (ctx) {
-        
-        const num_lines_x = Math.floor(ctx.canvas.height / defaltCord.gridSize);
-        const num_lines_y = Math.floor(ctx.canvas.width / defaltCord.gridSize);
-        drawCordX(ctx, defaltCord, num_lines_x);
-        drawCordY(ctx, defaltCord, num_lines_y);
-        ctx.translate(defaltCord.y_dis_gridlines*defaltCord.gridSize, defaltCord.x_dis_gridlines*defaltCord.gridSize);
-        drawCordTicksX(ctx, defaltCord, num_lines_x, num_lines_y);
-        drawCordTicksY(ctx, defaltCord, num_lines_x);
 
+    const draw = (ctx: CanvasRenderingContext2D) => {
+       
+        const num_lines_x = Math.floor(ctx.canvas.height / props.gridSize);
+        const num_lines_y = Math.floor(ctx.canvas.width / props.gridSize);
+        drawCordX(ctx, props, num_lines_x);
+        drawCordY(ctx, props, num_lines_y);
+        ctx.translate(props.y_dis_gridlines*props.gridSize, props.x_dis_gridlines*props.gridSize);
+        drawCordTicksX(ctx, props, num_lines_x);
+        drawCordTicksY(ctx, props, num_lines_x);
     }
+
+    useEffect(() => {
+    
+        
+    }, [canvasRef])
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const context = canvas?.getContext('2d');
+        // context!.fillStyle = getRndColor();
+        // context!.rect(0, 0, canvas!.width, canvas!.height);
+        // context!.fill();
+        draw(context as CanvasRenderingContext2D);
+         
+        return () => {
+            // @ts-ignore
+            context!.reset();
+        }
+
+    }, [draw])
+
+    function getRndColor() {
+        var r = 255*Math.random()|0,
+            g = 255*Math.random()|0,
+            b = 255*Math.random()|0;
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+    
+
     return (
       <canvas className="border border-black" ref={canvasRef} height={props.height || 500} width={props.width || 500} />
     )
 }
 
-function drawCordX(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_x: number) {
+
+function drawCordX(ctx: CanvasRenderingContext2D, Cord: CanvasProps, num_lines_x: number) {
     const {gridSize, x_dis_gridlines,} = Cord
     
     for(let i=0; i<=num_lines_x; i++) {
@@ -60,7 +87,7 @@ function drawCordX(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_x:
     }
 }
 
-function drawCordY(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_y: number) {
+function drawCordY(ctx: CanvasRenderingContext2D, Cord: CanvasProps, num_lines_y: number) {
     const {gridSize, y_dis_gridlines,} = Cord
     
     for(let i=0; i<= num_lines_y; i++) {
@@ -85,7 +112,7 @@ function drawCordY(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_y:
     }
 }
 
-function drawCordTicksX(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_x: number, num_lines_y: number) {
+function drawCordTicksX(ctx: CanvasRenderingContext2D, Cord: CanvasProps, num_lines_y: number) {
     const {gridSize,y_dis_gridlines, x_start} = Cord
 
 // Ticks marks along the positive X-axis
@@ -123,7 +150,7 @@ for(let i=1; i<y_dis_gridlines; i++) {
 }
 }
 
-function drawCordTicksY(ctx: CanvasRenderingContext2D, Cord: CanvasCord, num_lines_x: number) {
+function drawCordTicksY(ctx: CanvasRenderingContext2D, Cord: CanvasProps, num_lines_x: number) {
     const {gridSize,x_dis_gridlines, y_start} = Cord
 
     // Ticks marks along the positive Y-axis
@@ -162,6 +189,11 @@ for(let i=1; i<x_dis_gridlines; i++) {
     ctx.fillText(y_start.val*i + y_start.suffix, 8, -gridSize*i+3);
 }
 }
+
+function DrawFunc(ctx: CanvasRenderingContext2D, Cord: CanvasProps){
+    
+}
+
 
 
 export default Canvas;
