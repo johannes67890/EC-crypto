@@ -2,15 +2,15 @@ import { useEffect, useRef, useCallback } from "react";
 import React from "react";
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 // https://codeguppy.com/code.html?Y5OJoQCN2rQnq5UlZaBk
-type CanvasProps = {
+type CanvasOptions = {
   gridSize: number;
   x_dis_gridlines: number;
   y_dis_gridlines: number;
   x_start: { val: number; suffix: any };
   y_start: { val: number; suffix: any };
-  stroke?: number;
+  stroke: number;
   textSize?: number;
-} & typeof defaultProps;
+};
 
 const defaultProps = {
   gridSize: 25,
@@ -26,22 +26,21 @@ const Canvas: React.FC<{
   func: any;
   height: number;
   width: number;
-  options?: CanvasProps;
+  options: CanvasOptions;
 }> = ({ func, height, width, options }) => {
-  const { gridSize, x_dis_gridlines, y_dis_gridlines } =
-    options || defaultProps;
+  const { gridSize, x_dis_gridlines, y_dis_gridlines } = options;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const drawCords = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       const num_lines_x = Math.floor(ctx.canvas.height / gridSize);
       const num_lines_y = Math.floor(ctx.canvas.width / gridSize);
-      drawCordX(ctx, options || defaultProps, num_lines_x);
-      drawCordY(ctx, options || defaultProps, num_lines_y);
+      drawCordX(ctx, options, num_lines_x);
+      drawCordY(ctx, options, num_lines_y);
       ctx.translate(y_dis_gridlines * gridSize, x_dis_gridlines * gridSize);
-      drawCordTicksX(ctx, options || defaultProps, num_lines_x);
-      drawCordTicksY(ctx, options || defaultProps, num_lines_x);
-      drawFunc(func, ctx);
+      drawCordTicksX(ctx, options, num_lines_x);
+      drawCordTicksY(ctx, options, num_lines_x);
+      drawFunc(func, ctx, options);
     },
     [func, options]
   );
@@ -67,6 +66,12 @@ const Canvas: React.FC<{
   );
 };
 
+Canvas.defaultProps = {
+  height: 500,
+  width: 500,
+  options: defaultProps,
+};
+
 function createHiPPICanvas(
   canvas: HTMLCanvasElement,
   width: number,
@@ -82,9 +87,13 @@ function createHiPPICanvas(
   return canvas;
 }
 
-function drawFunc(func: any, ctx: CanvasRenderingContext2D) {
+function drawFunc(
+  func: any,
+  ctx: CanvasRenderingContext2D,
+  options: CanvasOptions
+) {
   ctx.beginPath();
-  ctx.lineWidth = 1;
+  ctx.lineWidth = options.stroke;
   ctx.strokeStyle = "#000000";
 
   for (let i = 0; i < ctx.canvas.width; i++) {
@@ -97,7 +106,7 @@ function drawFunc(func: any, ctx: CanvasRenderingContext2D) {
 
 function drawCordX(
   ctx: CanvasRenderingContext2D,
-  Cord: CanvasProps,
+  Cord: CanvasOptions,
   num_lines_x: number
 ) {
   const { gridSize, x_dis_gridlines } = Cord;
@@ -123,7 +132,7 @@ function drawCordX(
 
 function drawCordY(
   ctx: CanvasRenderingContext2D,
-  Cord: CanvasProps,
+  Cord: CanvasOptions,
   num_lines_y: number
 ) {
   const { gridSize, y_dis_gridlines, stroke } = Cord;
@@ -149,7 +158,7 @@ function drawCordY(
 
 function drawCordTicksX(
   ctx: CanvasRenderingContext2D,
-  Cord: CanvasProps,
+  Cord: CanvasOptions,
   num_lines_y: number
 ) {
   const { gridSize, y_dis_gridlines, x_start, stroke, textSize } = Cord;
@@ -191,7 +200,7 @@ function drawCordTicksX(
 
 function drawCordTicksY(
   ctx: CanvasRenderingContext2D,
-  Cord: CanvasProps,
+  Cord: CanvasOptions,
   num_lines_x: number
 ) {
   const { gridSize, x_dis_gridlines, y_start, stroke, textSize } = Cord;
