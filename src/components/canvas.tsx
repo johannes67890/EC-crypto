@@ -29,18 +29,9 @@ const Canvas = (props: CanvasProps) => {
     }
 
     useEffect(() => {
-    
-        
-    }, [canvasRef])
-
-    useEffect(() => {
         const canvas = canvasRef.current;
         const context = canvas?.getContext('2d');
-        // context!.fillStyle = getRndColor();
-        // context!.rect(0, 0, canvas!.width, canvas!.height);
-        // context!.fill();
         draw(context as CanvasRenderingContext2D);
-         
         return () => {
             // @ts-ignore
             context!.reset();
@@ -48,13 +39,6 @@ const Canvas = (props: CanvasProps) => {
 
     }, [draw])
 
-    function getRndColor() {
-        var r = 255*Math.random()|0,
-            g = 255*Math.random()|0,
-            b = 255*Math.random()|0;
-        return 'rgb(' + r + ',' + g + ',' + b + ')';
-    }
-    
 
     return (
       <canvas className="border border-black" ref={canvasRef} height={props.height || 500} width={props.width || 500} />
