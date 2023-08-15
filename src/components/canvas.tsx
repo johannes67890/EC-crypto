@@ -98,7 +98,7 @@ function drawFunc(
 
   for (let i = 0; i < ctx.canvas.width; i++) {
     const x = i - ctx.canvas.width / 2;
-    const y = func(x);
+    const y = func(x / options.gridSize) * options.gridSize;
     ctx.lineTo(x, -y);
   }
   ctx.stroke();
