@@ -88,7 +88,7 @@ function createHiPPICanvas(
 }
 
 function drawFunc(
-  func: any,
+  func: (x: number) => number,
   ctx: CanvasRenderingContext2D,
   options: CanvasOptions
 ) {
@@ -103,6 +103,58 @@ function drawFunc(
   }
   ctx.stroke();
 }
+
+// // Returns the right boundary of the logical viewport:
+// function MaxX() {
+//   return 10 ;
+// }
+
+// // Returns the left boundary of the logical viewport:
+// function MinX() {
+//   return -10 ;
+// }
+
+// // Returns the top boundary of the logical viewport:
+// function MaxY() {
+//   return MaxX() * 500 / 500;
+// }
+
+// // Returns the bottom boundary of the logical viewport:
+// function MinY() {
+//    return MinX() * 500 / 500;
+// }
+
+// // Returns the physical x-coordinate of a logical x-coordinate:
+// function XC(x: number) {
+//   return (x - MinX()) / (MaxX() - MinX()) * 500 ;
+// }
+
+// // Returns the physical y-coordinate of a logical y-coordinate:
+// function YC(y: number) {
+//   return 500 - (y - MinY()) / (MaxY() - MinY()) * 500 ;
+// }
+
+// function drawFunc(
+//     func: (x: number) => number,
+//     ctx: CanvasRenderingContext2D,
+//     options: CanvasOptions
+//   ) 
+//   {
+//   var first = true;
+
+//   ctx.beginPath() ;
+//   for (var x = MinX(); x <= MaxX(); x += (MaxX() - MinX()) / 500) {
+//    var y = func(x) ;
+//    if (first) {
+//     ctx.moveTo(XC(x),YC(y)) ;
+//     first = false ;
+//    } else {
+//     ctx.lineTo(XC(x),YC(y)) ;
+//    }
+//   }
+//   ctx.stroke() ;
+// }
+
 
 function drawCordX(
   ctx: CanvasRenderingContext2D,
