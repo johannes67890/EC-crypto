@@ -78,6 +78,8 @@ interface signature {
 * `subMod(x: BN, y: BN)` - subMod computes `z = (x - y) % p`
 * `mulMod(x: BN, y: BN)` - mulMod computes `z = (x * y) % p`
 * `expMod(x: BN, y: BN)` - expMod computes `z = (x^^y) % p`
+  
+  _Where `p` is the prime order of the Elliptic curve_
 ### Efficient Implementations of Elliptic Curves
 * `pointAdd(Point1, Point2)` - Computes the sum of two points on the elliptic curve.
 
