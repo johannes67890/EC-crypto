@@ -40,7 +40,7 @@ const Canvas: React.FC<{
       ctx.translate(y_dis_gridlines * gridSize, x_dis_gridlines * gridSize);
       drawCordTicksX(ctx, options, num_lines_x);
       drawCordTicksY(ctx, options, num_lines_x);
-      drawFunc(func, ctx, options);
+      drawFunc(func, ctx, 1, 1, 0.1);
     },
     [func, options]
   );
@@ -86,23 +86,44 @@ function createHiPPICanvas(
 
   return canvas;
 }
+type MathFunction = (x: number) => number;
 
-function drawFunc(
-  func: (x: number) => number,
-  ctx: CanvasRenderingContext2D,
-  options: CanvasOptions
-) {
+function drawFunc(equation: MathFunction, ctx: CanvasRenderingContext2D, startX: number, endX: number, step: number): void {
   ctx.beginPath();
-  ctx.lineWidth = options.stroke;
-  ctx.strokeStyle = "#000000";
 
-  for (let i = 0; i < ctx.canvas.width; i++) {
-    const x = i - ctx.canvas.width / 2;
-    const y = func(x / options.gridSize) * options.gridSize;
-    ctx.lineTo(x, -y);
+  const rangeX = endX - startX;
+  const rangeY = Math.abs(equation(endX)) * 2;
+
+  for (let x = startX; x <= endX; x += step) {
+    try {
+      const y = equation(x);
+      if (isNaN(y)) continue;
+
+      const canvasX = mapValue(x, startX, endX, 0, ctx.canvas.width);
+      const canvasY = mapValue(y, -rangeY / 2, rangeY / 2, ctx.canvas.height, 0);
+
+      console.log(canvasX, canvasY);
+      
+
+      if (x === startX) {
+        ctx.moveTo(canvasX, canvasY);
+      } else {
+        ctx.lineTo(canvasX, canvasY);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  ctx.strokeStyle = "blue";
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
+function mapValue(value: number, inputMin: number, inputMax: number, outputMin: number, outputMax: number): number {
+  return ((value - inputMin) * (outputMax - outputMin)) / (inputMax - inputMin) + outputMin;
+}
+
+
 
 // // Returns the right boundary of the logical viewport:
 // function MaxX() {
